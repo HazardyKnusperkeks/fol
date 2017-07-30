@@ -17,6 +17,9 @@ struct IsAtom : std::false_type { };
 template<char... Name>
 struct IsAtom<Variable<Name>> : std::true_type { };
 
+template<>
+struct IsAtom<RtVariable> : std::true_type { };
+
 } //namespace fol
 
 #endif

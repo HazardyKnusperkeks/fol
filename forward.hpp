@@ -11,6 +11,8 @@ namespace fol {
 template<char... Name>
 class Variable;
 
+class RtVariable;
+
 } //namespace fol
 
 #endif
