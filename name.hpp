@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <array>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -114,6 +115,32 @@ class RtName {
 			throw std::invalid_argument{"Variable name must not be empty!"};
 		} //if ( Name.empty() )
 		return;
+	}
+	
+	RtName prev(void) const & {
+		return RtName{*this}.prev();
+	}
+	
+	RtName prev(void) && {
+		char& lastChar = Name.back();
+		if ( details::toLower(lastChar) == 'a' ) {
+			if ( Name.size() <= 1 ) {
+				throw std::domain_error{"There is no previous name to \"a\" or \"A\"!"};
+			} //if ( Name.size() <= 1 )
+			char& nextToLastChar = Name[Name.size() - 2];
+			if ( details::toLower(nextToLastChar) == 'a' ) {
+				nextToLastChar = 'z';
+				Name.erase(Name.size() - 1);
+			} //if ( details::toLower(nextToLastChar) == 'a' )
+			else {
+				--nextToLastChar;
+				lastChar = 'z';
+			} //else -> if ( details::toLower(nextToLastChar) == 'a' )
+		} //if ( details::toLower(lastChar) == 'a' )
+		else {
+			--lastChar;
+		} //else -> if ( details::toLower(lastChar) == 'a' )
+		return std::move(*this);
 	}
 	
 	friend bool operator==(const RtName& n1, const RtName& n2) noexcept {

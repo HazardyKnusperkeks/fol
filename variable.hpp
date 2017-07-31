@@ -39,6 +39,14 @@ class RtVariable {
 		return;
 	}
 	
+	RtVariable prev(void) const & {
+		return {Name.prev()};
+	}
+	
+	RtVariable prev(void) && {
+		return {std::move(Name).prev()};
+	}
+	
 	friend bool operator==(const RtVariable& v1, const RtVariable& v2) noexcept {
 		return v1.Name == v2.Name;
 	}

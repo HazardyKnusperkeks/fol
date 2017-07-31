@@ -36,9 +36,30 @@ int main(void) {
 	assert(foo != cX);
 	assert(cX != foo);*/
 	
+	assert(RtVariable{"x"}.prev()   == RtVariable{"w"});
+	assert(RtVariable{"xb"}.prev()  == RtVariable{"xa"});
+	assert(RtVariable{"xa"}.prev()  == RtVariable{"wz"});
+	assert(RtVariable{"xbc"}.prev() == RtVariable{"xbb"});
+	assert(RtVariable{"xya"}.prev() == RtVariable{"xxz"});
+	assert(RtVariable{"aa"}.prev()  == RtVariable{"z"});
+	assert(RtVariable{"aaa"}.prev() == RtVariable{"az"});
+	try {
+		RtVariable{"a"}.prev();
+		assert(false);
+	} //try
+	catch ( std::domain_error& ) {
+		
+	} //catch ( std::domain_error& )
+	catch ( ... ) {
+		assert(false);
+	} //catch ( ... )
+	
+	auto rtBar = rtFoo.prev();
+	
 	std::cout<<std::endl
 	         <<"   ====   Runtime   ===="<<std::endl
 	         <<rtX<<' '<<sizeof(rtX)<<std::endl
-	         <<rtFoo<<' '<<sizeof(rtFoo)<<std::endl;
+	         <<rtFoo<<' '<<sizeof(rtFoo)<<std::endl
+	         <<rtBar<<std::endl;
 	return 0;
 }
