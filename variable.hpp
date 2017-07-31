@@ -10,7 +10,6 @@
 
 #include <array>
 #include <ostream>
-#include <string>
 
 namespace fol {
 
@@ -29,14 +28,14 @@ class Variable : public Name<String...> {
 };
 
 class RtVariable {
-	std::string Name;
+	RtName Name;
 	
 	public:
-	RtVariable(const char c) : Name{&c, 1} { return; }
-	RtVariable(std::string name) : Name(std::move(name)) {
-		if ( Name.empty() ) {
-			throw std::invalid_argument{"Variable name must not be empty!"};
-		} //if ( Name.empty() )
+	RtVariable(const char c) : Name{c} { return; }
+	RtVariable(std::string name) : Name{std::move(name)} {
+		return;
+	}
+	RtVariable(RtName name) : Name{std::move(name)} {
 		return;
 	}
 	

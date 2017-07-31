@@ -118,6 +118,36 @@ bool compare(const Name<String...>, const std::string& s) noexcept {
 	return std::equal(str.begin(), str.end(), s.begin(), s.end());
 }
 
+class RtName {
+	std::string Name;
+	public:
+	RtName(const char c) : Name{&c, 1} { return; }
+	RtName(std::string name) : Name{std::move(name)} {
+		if ( Name.empty() ) {
+			throw std::invalid_argument{"Variable name must not be empty!"};
+		} //if ( Name.empty() )
+		return;
+	}
+	
+	friend bool operator==(const RtName& n1, const RtName& n2) noexcept {
+		return n1.Name == n2.Name;
+	}
+	
+	friend bool operator!=(const RtName& n1, const RtName& n2) noexcept {
+		return !(n1 == n2);
+	}
+	
+	friend std::ostream& operator<<(std::ostream& os, const RtName& n) noexcept {
+		return os<<n.Name;
+	}
+	
+	template<char... String>
+	friend bool compare(const fol::Name<String...>, const RtName& name) noexcept {
+		auto str = std::array{String...};
+		return std::equal(str.begin(), str.end(), name.Name.begin(), name.Name.end());
+	}
+};
+
 } //namespace fol
 
 #endif
