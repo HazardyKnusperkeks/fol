@@ -25,19 +25,6 @@ constexpr char toLower(const char c) noexcept {
 	return c;
 }
 
-template<char c>
-void print(std::ostream& os) {
-	os<<c;
-	return;
-}
-
-template<char c1, char c2, char... String>
-void print(std::ostream& os) {
-	os<<c1;
-	print<c2,String...>(os);
-	return;
-}
-
 template<std::size_t N, char c1, char... String>
 struct NameChar {
 	static constexpr char c = NameChar<N-1, String...>::c;
@@ -107,15 +94,15 @@ class Name {
 };
 
 template<char... String>
-void print(std::ostream& os, const Name<String...>) noexcept {
-	details::print<String...>(os);
+void print(std::ostream& os) noexcept {
+	(os<<...<<String);
 	return;
 }
 
-template<char... String>
-bool compare(const Name<String...>, const std::string& s) noexcept {
-	auto str = std::array{String...};
-	return std::equal(str.begin(), str.end(), s.begin(), s.end());
+template<char... String, std::enable_if_t<sizeof...(String)>=1>* = nullptr>
+std::ostream& operator<<(std::ostream& os, const Name<String...>) noexcept {
+	print<String...>(os);
+	return os;
 }
 
 class RtName {

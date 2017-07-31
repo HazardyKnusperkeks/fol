@@ -67,16 +67,10 @@ class RtVariable {
 		return !(v2 == v1);
 	}
 	
-	friend std::ostream& operator<<(std::ostream& os, const fol::RtVariable& v) noexcept {
+	friend std::ostream& operator<<(std::ostream& os, const RtVariable& v) noexcept {
 		return os<<v.Name;
 	}
 };
-
-template<char c, char... String>
-std::ostream& operator<<(std::ostream& os, const fol::Variable<c, String...> v) noexcept {
-	print(os, v);
-	return os;
-}
 
 } //namespace fol
 
