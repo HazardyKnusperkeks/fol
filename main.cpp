@@ -24,6 +24,14 @@ int main(void) {
 	assert(x != rtY);
 	assert(rtX != rtY);
 	assert(rtX == rtX2);
+	assert(rtX == cX);
+	assert(cX == rtX);
+	assert(rtFoo != cX);
+	assert(cX != rtFoo);
+/*	assert(x == cX);
+	assert(cX == x);
+	assert(foo != cX);
+	assert(cX != foo);*/
 	
 	std::cout<<std::endl
 	         <<"   ====   Runtime   ===="<<std::endl
