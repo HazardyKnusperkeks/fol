@@ -8,13 +8,25 @@
 
 #include "name.hpp"
 
+#include <array>
 #include <ostream>
 #include <string>
 
 namespace fol {
 
 template<char... String>
-class Variable : public Name<String...> { };
+class Variable : public Name<String...> {
+	public:
+	constexpr auto prev(void) const noexcept {
+		auto temp = Name<String...>::prev();
+		return fromName(temp);
+	}
+	
+	template<char... String2>
+	static constexpr Variable<String2...> fromName(const Name<String2...>) noexcept {
+		return {};
+	}
+};
 
 class RtVariable {
 	std::string Name;

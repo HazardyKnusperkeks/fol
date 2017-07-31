@@ -10,8 +10,11 @@ int main(void) {
 	Variable<'x'> x;
 	Variable<'F', 'o', 'o'> foo;
 	
-	std::cout<<x<<std::endl
-	         <<foo<<std::endl;
+	auto bar = foo.prev();
+	
+	std::cout<<x<<' '<<std::endl
+	         <<foo<<' '<<std::endl
+	         <<bar<<std::endl;
 	
 	volatile char cX{'x'};
 	
