@@ -12,8 +12,8 @@ int main(void) {
 	
 	auto bar = foo.prev();
 	
-	std::cout<<x<<' '<<std::endl
-	         <<foo<<' '<<std::endl
+	std::cout<<x<<' '<<sizeof(x)<<std::endl
+	         <<foo<<' '<<sizeof(foo)<<std::endl
 	         <<bar<<std::endl;
 	
 	volatile char cX{'x'};
@@ -38,7 +38,7 @@ int main(void) {
 	
 	std::cout<<std::endl
 	         <<"   ====   Runtime   ===="<<std::endl
-	         <<rtX<<std::endl
-	         <<rtFoo<<std::endl;
+	         <<rtX<<' '<<sizeof(rtX)<<std::endl
+	         <<rtFoo<<' '<<sizeof(rtFoo)<<std::endl;
 	return 0;
 }
