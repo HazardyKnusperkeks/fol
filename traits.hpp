@@ -12,6 +12,7 @@
 
 namespace fol {
 
+template<typename T>
 struct IsTerm : std::false_type { };
 
 template<char... Name>
