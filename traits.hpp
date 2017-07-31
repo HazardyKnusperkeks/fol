@@ -12,13 +12,13 @@
 
 namespace fol {
 
-struct IsAtom : std::false_type { };
+struct IsTerm : std::false_type { };
 
 template<char... Name>
-struct IsAtom<Variable<Name>> : std::true_type { };
+struct IsTerm<Variable<Name>> : std::true_type { };
 
 template<>
-struct IsAtom<RtVariable> : std::true_type { };
+struct IsTerm<RtVariable> : std::true_type { };
 
 } //namespace fol
 
