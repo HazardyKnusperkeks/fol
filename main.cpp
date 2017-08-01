@@ -66,6 +66,16 @@ int main(void) {
 	catch ( ... ) {
 		assert(false);
 	} //catch ( ... )
+
+	assert(RtVariable{"w"}.next()    == RtVariable{"x"});
+	assert(RtVariable{"xa"}.next()   == RtVariable{"xb"});
+	assert(RtVariable{"wz"}.next()   == RtVariable{"xa"});
+	assert(RtVariable{"xbb"}.next()  == RtVariable{"xbc"});
+	assert(RtVariable{"xxz"}.next()  == RtVariable{"xya"});
+	assert(RtVariable{"z"}.next()    == RtVariable{"aa"});
+	assert(RtVariable{"zz"}.next()   == RtVariable{"aaa"});
+	assert(RtVariable{"zzz"}.next()  == RtVariable{"aaaa"});
+	assert(RtVariable{"a9"}.next()   == RtVariable{"ba"});
 	
 	auto rtBar = rtFoo.prev();
 	

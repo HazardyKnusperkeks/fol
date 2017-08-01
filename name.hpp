@@ -216,6 +216,32 @@ class RtName {
 		return std::move(*this);
 	}
 	
+	RtName next(void) const & {
+		return RtName{*this}.next();
+	}
+	
+	RtName next(void) && {
+		{
+			char& lastChar = Name.back();
+			if ( !details::nextWrap(lastChar) ) {
+				++lastChar;
+				return std::move(*this);
+			} //if ( !details::nextWrap(lastChar) )
+		}
+		
+		for ( auto iter = Name.rbegin(), end = Name.rend(); iter != end; ++iter ) {
+			if ( details::nextWrap(*iter) ) {
+				*iter = 'a';
+			} //if ( details::nextWrap(*iter) )
+			else {
+				++*iter;
+				return std::move(*this);
+			} //else -> if ( details::nextWrap(*iter) )
+		} //for ( auto iter = Name.rbegin(), end = Name.rend(); iter != end; ++iter )
+		Name.insert(Name.begin(), 'a');
+		return std::move(*this);
+	}
+	
 	friend bool operator==(const RtName& n1, const RtName& n2) noexcept {
 		return n1.Name == n2.Name;
 	}
