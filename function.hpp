@@ -15,12 +15,12 @@
 
 namespace fol {
 
-template<typename Name, typename... Args>
+template<typename NameT, typename... Args>
 class Function {
-	static_assert(IsName<Name>::value, "First template argument must be a name!");
+	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
-	Name N;
+	NameT N;
 	std::tuple<Args...> A;
 	
 	friend std::ostream& operator<<(std::ostream& os, const Function& f) {
