@@ -13,12 +13,13 @@
 
 namespace fol {
 
-template<char... String>
-class Variable : public Name<String...> {
+template<char c, char... String>
+class Variable {
 	public:
+	Name<c,String...> N;
+	
 	constexpr auto prev(void) const noexcept {
-		auto temp = Name<String...>::prev();
-		return fromName(temp);
+		return fromName(N.prev());
 	}
 	
 	template<char... String2>
@@ -26,6 +27,21 @@ class Variable : public Name<String...> {
 		return {};
 	}
 };
+
+template<char... String1, char... String2>
+constexpr bool operator==(const Variable<String1...> v1, const Variable<String2...> v2) noexcept {
+	return v1.N == v2.N;
+}
+
+template<char... String1, char... String2>
+constexpr bool operator!=(const Variable<String1...> v1, const Variable<String2...> v2) noexcept {
+	return !(v1 == v2);
+}
+
+template<char... String>
+std::ostream& operator<<(std::ostream& os, const Variable<String...> v) {
+	return os<<v.N;
+}
 
 class RtVariable {
 	RtName Name;
@@ -57,7 +73,7 @@ class RtVariable {
 	
 	template<char... String>
 	friend bool operator==(const RtVariable& v1, const Variable<String...> v2) noexcept {
-		return compare(v2, v1.Name);
+		return compare(v2.N, v1.Name);
 	}
 	
 	template<char... String>
