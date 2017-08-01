@@ -13,6 +13,9 @@ class Variable;
 
 class RtVariable;
 
+template<typename Name, typename... Args>
+class Function;
+
 } //namespace fol
 
 #endif

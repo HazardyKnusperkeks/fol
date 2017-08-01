@@ -13,6 +13,15 @@
 namespace fol {
 
 template<typename T>
+struct IsName : std::false_type { };
+
+template<char... String>
+struct IsName<Name<String...>> : std::true_type { };
+
+template<>
+struct IsName<RtName> : std::true_type { };
+
+template<typename T>
 struct IsTerm : std::false_type { };
 
 template<char... Name>
@@ -20,6 +29,9 @@ struct IsTerm<Variable<Name...>> : std::true_type { };
 
 template<>
 struct IsTerm<RtVariable> : std::true_type { };
+
+template<typename Name, typename... Args>
+struct IsTerm<Function<Name, Args...>> : std::true_type { };
 
 } //namespace fol
 

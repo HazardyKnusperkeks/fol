@@ -1,4 +1,5 @@
 #include "asserts.hpp"
+#include "function.hpp"
 #include "variable.hpp"
 
 #include <cassert>
@@ -12,9 +13,19 @@ int main(void) {
 	
 	auto bar = foo.prev();
 	
+	Function<Name<'f', '1'>> f1;
+	Function<Name<'f', '2'>, Variable<'y'>> f2;
+	Function<Name<'f', '3'>, Variable<'x'>, Variable<'y'>> f3;
+	Function<Name<'f', '4'>, Variable<'x'>, decltype(f2)> f4;
+	
 	std::cout<<x<<' '<<sizeof(x)<<std::endl
 	         <<foo<<' '<<sizeof(foo)<<std::endl
-	         <<bar<<std::endl;
+	         <<bar<<' '<<sizeof(bar)<<std::endl
+	         <<f1<<' '<<sizeof(f1)<<std::endl
+	         <<f2<<' '<<sizeof(f2)<<std::endl
+	         <<f3<<' '<<sizeof(f3)<<std::endl
+	         <<f4<<' '<<sizeof(f4)<<std::endl
+	         ;
 	
 	volatile char cX{'x'};
 	
@@ -58,8 +69,10 @@ int main(void) {
 	
 	std::cout<<std::endl
 	         <<"   ====   Runtime   ===="<<std::endl
+	         <<std::endl
 	         <<rtX<<' '<<sizeof(rtX)<<std::endl
 	         <<rtFoo<<' '<<sizeof(rtFoo)<<std::endl
-	         <<rtBar<<std::endl;
+	         <<rtBar<<' '<<sizeof(rtBar)<<std::endl
+	         ;
 	return 0;
 }
