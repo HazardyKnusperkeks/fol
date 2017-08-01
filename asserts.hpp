@@ -25,6 +25,16 @@ static_assert(Variable<'a', 'a', 'a'>{}.prev()      == Variable<'z', 'z'>{});
 static_assert(Variable<'a', 'a', 'a', 'a'>{}.prev() == Variable<'z', 'z', 'z'>{});
 static_assert(Variable<'a', '0'>{}.prev()           == Variable<'z'>{});
 
+static_assert(Variable<'w'>{}.next()                == Variable<'x'>{});
+static_assert(Variable<'x', 'a'>{}.next()           == Variable<'x', 'b'>{});
+static_assert(Variable<'w', 'z'>{}.next()           == Variable<'x', 'a'>{});
+static_assert(Variable<'x', 'b', 'b'>{}.next()      == Variable<'x', 'b', 'c'>{});
+static_assert(Variable<'x', 'x', 'z'>{}.next()      == Variable<'x', 'y', 'a'>{});
+static_assert(Variable<'z'>{}.next()                == Variable<'a', 'a'>{});
+static_assert(Variable<'z', 'z'>{}.next()           == Variable<'a', 'a', 'a'>{});
+static_assert(Variable<'z', 'z', 'z'>{}.next()      == Variable<'a', 'a', 'a', 'a'>{});
+static_assert(Variable<'a', '9'>{}.next()           == Variable<'b', 'a'>{});
+
 
 } //namespace fol
 

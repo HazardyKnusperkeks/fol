@@ -22,6 +22,10 @@ class Variable {
 		return fromName(N.prev());
 	}
 	
+	constexpr auto next(void) const noexcept {
+		return fromName(N.next());
+	}
+	
 	template<char... String2>
 	static constexpr Variable<String2...> fromName(const Name<String2...>) noexcept {
 		return {};

@@ -95,9 +95,41 @@ constexpr auto namePrev(const Name<String...>) noexcept {
 	return fromHelper(namePrevImpl<String...>());
 }
 
-template<std::size_t N, char... c, char... String, typename Idx = std::make_index_sequence<N>>
-constexpr auto namePrevHelper(const Name<String...> n) noexcept {
-	return namePrevHelperImpl<c...>(n, Idx{});
+template<char c>
+constexpr auto nameNextImpl(void) noexcept {
+	if constexpr ( nextWrap(c) ) {
+		return NameHelper<'a'>{true};
+	} //if constexpr ( nextWrap(c) )
+	else {
+		return NameHelper<static_cast<char>(c+1)>{false};
+	} //else -> if constexpr ( nextWrap(c) )
+}
+
+template<char c1, char c2, char... String>
+constexpr auto nameNextImpl(void) noexcept {
+	constexpr auto tail = nameNextImpl<c2,String...>();
+	if constexpr ( tail.ChangePrevious ) {
+		if constexpr ( nextWrap(c1) ) {
+			return NameHelper<'a'>{true} + tail;
+		} //if constexpr ( nextWrap(c1) )
+		else {
+			return NameHelper<static_cast<char>(c1+1)>{} + tail;
+		} //else -> if constexpr ( nextWrap(c1) )
+	} //if constexpr ( tail.ChangePrevious )
+	else {
+		return NameHelper<c1>{} + tail;
+	} //else -> if constexpr ( tail.ChangePrevious )
+}
+
+template<char... String>
+constexpr auto nameNext(const Name<String...>) noexcept {
+	constexpr auto temp = nameNextImpl<String...>();
+	if constexpr ( temp.ChangePrevious ) {
+		return fromHelper(NameHelper<'a'>{} + temp);
+	} //if constexpr ( temp.ChangePrevious )
+	else {
+		return fromHelper(temp);
+	} //else -> if constexpr ( temp.ChangePrevious )
 }
 }
 
@@ -121,6 +153,10 @@ class Name {
 		else {
 			return details::namePrev(*this);
 		} //else -> if constexpr ( Length::value <= 1 && details::prevWrap(lastChar))
+	}
+	
+	constexpr auto next(void) const noexcept {
+		return details::nameNext(*this);
 	}
 	
 	constexpr bool operator==(const Name) const noexcept { return true; }
