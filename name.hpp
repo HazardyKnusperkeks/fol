@@ -154,24 +154,29 @@ class RtName {
 	}
 	
 	RtName prev(void) && {
-		char& lastChar = Name.back();
-		if ( details::prevWrap(lastChar) ) {
-			if ( Name.size() <= 1 ) {
-				throw std::domain_error{"There is no previous name to \"a\" or \"A\"!"};
-			} //if ( Name.size() <= 1 )
-			char& nextToLastChar = Name[Name.size() - 2];
-			if ( details::prevWrap(nextToLastChar) ) {
-				nextToLastChar = 'z';
-				Name.erase(Name.size() - 1);
-			} //if ( details::prevWrap(nextToLastChar) )
+		{
+			char& lastChar = Name.back();
+			if ( !details::prevWrap(lastChar) ) {
+				--lastChar;
+				return std::move(*this);
+			} //if ( !details::prevWrap(lastChar) )
+		}
+		
+		if ( Name.size() <= 1 ) {
+			throw std::domain_error{"There is no previous name to \"a\", \"A\", or \"0\"!"};
+		} //if ( Name.size() <= 1 )
+		
+		Name.pop_back();
+		for ( auto iter = Name.rbegin(), end = Name.rend(); iter != end; ++iter ) {
+			if ( details::prevWrap(*iter) ) {
+				*iter = 'z';
+			} //if ( details::prevWrap(*iter) )
 			else {
-				--nextToLastChar;
-				lastChar = 'z';
-			} //else -> if ( details::prevWrap(nextToLastChar) )
-		} //if ( details::prevWrap(lastChar) )
-		else {
-			--lastChar;
-		} //else -> if ( details::prevWrap(lastChar) )
+				--*iter;
+				Name.insert(iter.base(), 'z');
+				return std::move(*this);
+			} //else -> if ( details::prevWrap(*iter) )
+		} //for ( auto iter = Name.rbegin(), end = Name.rend(); iter != end; ++iter )
 		return std::move(*this);
 	}
 	

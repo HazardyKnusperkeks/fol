@@ -47,14 +47,15 @@ int main(void) {
 	assert(foo != cX);
 	assert(cX != foo);*/
 	
-	assert(RtVariable{"x"}.prev()   == RtVariable{"w"});
-	assert(RtVariable{"xb"}.prev()  == RtVariable{"xa"});
-	assert(RtVariable{"xa"}.prev()  == RtVariable{"wz"});
-	assert(RtVariable{"xbc"}.prev() == RtVariable{"xbb"});
-	assert(RtVariable{"xya"}.prev() == RtVariable{"xxz"});
-	assert(RtVariable{"aa"}.prev()  == RtVariable{"z"});
-	assert(RtVariable{"aaa"}.prev() == RtVariable{"az"});
-	assert(RtVariable{"a0"}.prev()  == RtVariable{"z"});
+	assert(RtVariable{"x"}.prev()    == RtVariable{"w"});
+	assert(RtVariable{"xb"}.prev()   == RtVariable{"xa"});
+	assert(RtVariable{"xa"}.prev()   == RtVariable{"wz"});
+	assert(RtVariable{"xbc"}.prev()  == RtVariable{"xbb"});
+	assert(RtVariable{"xya"}.prev()  == RtVariable{"xxz"});
+	assert(RtVariable{"aa"}.prev()   == RtVariable{"z"});
+	assert(RtVariable{"aaa"}.prev()  == RtVariable{"zz"});
+	assert(RtVariable{"aaaa"}.prev() == RtVariable{"zzz"});
+	assert(RtVariable{"a0"}.prev()   == RtVariable{"z"});
 	try {
 		RtVariable{"a"}.prev();
 		assert(false);
