@@ -49,9 +49,50 @@ constexpr char nameChar(const Name<String...>) noexcept {
 	return NameChar<N, String...>::c;
 }
 
-template<char... c, char... String, std::size_t... Idx>
-constexpr auto namePrevHelperImpl([[maybe_unused]] const Name<String...> n, const std::index_sequence<Idx...>) noexcept {
-	return Name<(nameChar<Idx>(n))...,c...>{};
+template<char... String>
+struct NameHelper {
+	bool ChangePrevious{false};
+	
+	template<char... String2>
+	constexpr NameHelper<String...,String2...> operator+(const NameHelper<String2...> n) noexcept {
+		return {ChangePrevious && n.ChangePrevious};
+	}
+};
+
+template<char... String>
+constexpr Name<String...> fromHelper(const NameHelper<String...>) noexcept {
+	return {};
+}
+
+template<char c>
+constexpr auto namePrevImpl(void) noexcept {
+	if constexpr ( prevWrap(c) ) {
+		return NameHelper<>{true};
+	} //if constexpr ( prevWrap(c) )
+	else {
+		return NameHelper<static_cast<char>(c-1)>{false};
+	} //else -> if constexpr ( prevWrap(c) )
+}
+
+template<char c1, char c2, char... String>
+constexpr auto namePrevImpl(void) noexcept {
+	constexpr auto tail = namePrevImpl<c2,String...>();
+	if constexpr ( tail.ChangePrevious ) {
+		if constexpr ( prevWrap(c1) ) {
+			return NameHelper<'z'>{true} + tail;
+		} //if constexpr ( prevWrap(c1) )
+		else {
+			return NameHelper<static_cast<char>(c1-1), 'z'>{} + tail;
+		} //else -> if constexpr ( prevWrap(c1) )
+	} //if constexpr ( tail.ChangePrevious )
+	else {
+		return NameHelper<c1>{} + tail;
+	} //else -> if constexpr ( tail.ChangePrevious )
+}
+
+template<char... String>
+constexpr auto namePrev(const Name<String...>) noexcept {
+	return fromHelper(namePrevImpl<String...>());
 }
 
 template<std::size_t N, char... c, char... String, typename Idx = std::make_index_sequence<N>>
@@ -70,27 +111,16 @@ class Name {
 	
 	constexpr auto prev(void) const noexcept {
 		constexpr auto lastChar = Char<Length::value-1>::value;
-		if constexpr ( details::prevWrap(lastChar) ) {
-			static_assert(Length::value > 1, "There is no previous name to \"a\" or \"A\"!");
-			
-			/* At least MinGW 7.1 does try to calculate Char<Length::value-2>::value even though the assert fired. So
-			 * add another if and a wrong return value. This way at least the compiler terminates. */
-			if constexpr ( Length::value <= 1 ) {
-				return;
-			} //if constexpr ( Length::value <= 1 )
-			else {
-				constexpr auto nextToLastChar = Char<Length::value-2>::value;
-				if constexpr ( details::prevWrap(nextToLastChar) ) {
-					return details::namePrevHelper<Length::value-2, 'z'>(*this);
-				} //if constexpr ( details::prevWrap(nextToLastChar) )
-				else {
-					return details::namePrevHelper<Length::value-2, nextToLastChar-1, 'z'>(*this);
-				} //else -> if constexpr ( details::prevWrap(nextToLastChar) )
-			} //else -> if constexpr ( Length::value <= 1 )
-		} //if constexpr ( details::prevWrap(lastChar) )
+		static_assert(Length::value > 1 || !details::prevWrap(lastChar), "There is no previous name to \"a\", \"A\", or \"0\"!");
+		
+		/* At least MinGW 7.1 does try to calculate Char<Length::value-2>::value even though the assert fired. So
+		 * add another if and a wrong return value. This way at least the compiler terminates. */
+		if constexpr ( Length::value <= 1 && details::prevWrap(lastChar)) {
+			return;
+		} //if constexpr ( Length::value <= 1 && details::prevWrap(lastChar))
 		else {
-			return details::namePrevHelper<Length::value-1, lastChar-1>(*this);
-		} //else -> if constexpr ( details::prevWrap(lastChar) )
+			return details::namePrev(*this);
+		} //else -> if constexpr ( Length::value <= 1 && details::prevWrap(lastChar))
 	}
 	
 	constexpr bool operator==(const Name) const noexcept { return true; }
