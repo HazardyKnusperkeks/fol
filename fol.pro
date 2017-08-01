@@ -38,6 +38,7 @@ SOURCES		 = main.cpp
 
 HEADERS		 = asserts.hpp\
 			   forward.hpp\
+			   helper.hpp\
 			   name.hpp\
 			   traits.hpp\
 			   variable.hpp
