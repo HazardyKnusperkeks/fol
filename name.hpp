@@ -94,15 +94,9 @@ class Name {
 	constexpr bool operator!=(const Name<String2...>) const noexcept { return true; }
 };
 
-template<char... String>
-void print(std::ostream& os) noexcept {
-	(os<<...<<String);
-	return;
-}
-
 template<char... String, std::enable_if_t<sizeof...(String)>=1>* = nullptr>
 std::ostream& operator<<(std::ostream& os, const Name<String...>) noexcept {
-	print<String...>(os);
+	(os<<...<<String);
 	return os;
 }
 
