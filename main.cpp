@@ -54,6 +54,7 @@ int main(void) {
 	assert(RtVariable{"xya"}.prev() == RtVariable{"xxz"});
 	assert(RtVariable{"aa"}.prev()  == RtVariable{"z"});
 	assert(RtVariable{"aaa"}.prev() == RtVariable{"az"});
+	assert(RtVariable{"a0"}.prev()  == RtVariable{"z"});
 	try {
 		RtVariable{"a"}.prev();
 		assert(false);

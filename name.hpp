@@ -26,6 +26,14 @@ constexpr char toLower(const char c) noexcept {
 	return c;
 }
 
+constexpr bool prevWrap(const char c) noexcept {
+	return toLower(c) == 'a' || c == '0';
+}
+
+constexpr bool nextWrap(const char c) noexcept {
+	return toLower(c) == 'z' || c == '9';
+}
+
 template<std::size_t N, char c1, char... String>
 struct NameChar {
 	static constexpr char c = NameChar<N-1, String...>::c;
@@ -62,7 +70,7 @@ class Name {
 	
 	constexpr auto prev(void) const noexcept {
 		constexpr auto lastChar = Char<Length::value-1>::value;
-		if constexpr ( details::toLower(lastChar) == 'a' ) {
+		if constexpr ( details::prevWrap(lastChar) ) {
 			static_assert(Length::value > 1, "There is no previous name to \"a\" or \"A\"!");
 			
 			/* At least MinGW 7.1 does try to calculate Char<Length::value-2>::value even though the assert fired. So
@@ -72,17 +80,17 @@ class Name {
 			} //if constexpr ( Length::value <= 1 )
 			else {
 				constexpr auto nextToLastChar = Char<Length::value-2>::value;
-				if constexpr ( details::toLower(nextToLastChar) == 'a' ) {
+				if constexpr ( details::prevWrap(nextToLastChar) ) {
 					return details::namePrevHelper<Length::value-2, 'z'>(*this);
-				} //if constexpr ( details::toLower(nextToLastChar) == 'a' )
+				} //if constexpr ( details::prevWrap(nextToLastChar) )
 				else {
 					return details::namePrevHelper<Length::value-2, nextToLastChar-1, 'z'>(*this);
-				} //else -> if constexpr ( details::toLower(nextToLastChar) == 'a' )
+				} //else -> if constexpr ( details::prevWrap(nextToLastChar) )
 			} //else -> if constexpr ( Length::value <= 1 )
-		} //if constexpr ( details::toLower(lastChar) == 'a' )
+		} //if constexpr ( details::prevWrap(lastChar) )
 		else {
 			return details::namePrevHelper<Length::value-1, lastChar-1>(*this);
-		} //else -> if constexpr ( details::toLower(lastChar) == 'a' )
+		} //else -> if constexpr ( details::prevWrap(lastChar) )
 	}
 	
 	constexpr bool operator==(const Name) const noexcept { return true; }
@@ -117,23 +125,23 @@ class RtName {
 	
 	RtName prev(void) && {
 		char& lastChar = Name.back();
-		if ( details::toLower(lastChar) == 'a' ) {
+		if ( details::prevWrap(lastChar) ) {
 			if ( Name.size() <= 1 ) {
 				throw std::domain_error{"There is no previous name to \"a\" or \"A\"!"};
 			} //if ( Name.size() <= 1 )
 			char& nextToLastChar = Name[Name.size() - 2];
-			if ( details::toLower(nextToLastChar) == 'a' ) {
+			if ( details::prevWrap(nextToLastChar) ) {
 				nextToLastChar = 'z';
 				Name.erase(Name.size() - 1);
-			} //if ( details::toLower(nextToLastChar) == 'a' )
+			} //if ( details::prevWrap(nextToLastChar) )
 			else {
 				--nextToLastChar;
 				lastChar = 'z';
-			} //else -> if ( details::toLower(nextToLastChar) == 'a' )
-		} //if ( details::toLower(lastChar) == 'a' )
+			} //else -> if ( details::prevWrap(nextToLastChar) )
+		} //if ( details::prevWrap(lastChar) )
 		else {
 			--lastChar;
-		} //else -> if ( details::toLower(lastChar) == 'a' )
+		} //else -> if ( details::prevWrap(lastChar) )
 		return std::move(*this);
 	}
 	
