@@ -23,6 +23,26 @@ class Function {
 	NameT N;
 	std::tuple<Args...> A;
 	
+	public:
+	constexpr Function(void) = default;
+	
+	constexpr Function(NameT n, std::tuple<Args...> t = {}) : N(std::move(n)), A(std::move(t)) {
+		return;
+	}
+	
+	constexpr auto prev(void) const {
+		return fromName(N.prev(), A);
+	}
+	
+	constexpr auto next(void) const {
+		return fromName(N.next(), A);
+	}
+	
+	template<typename Name2>
+	static constexpr Function<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t) {
+		return {n, t};
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Function& f) {
 		os<<f.N;
 		if constexpr ( sizeof...(Args) >= 1 ) {

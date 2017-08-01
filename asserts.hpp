@@ -6,6 +6,7 @@
 #ifndef FOL_ASSERTS_HPP
 #define FOL_ASSERTS_HPP
 
+#include "function.hpp"
 #include "variable.hpp"
 
 namespace fol {
@@ -34,6 +35,13 @@ static_assert(Variable<'z'>{}.next()                == Variable<'a', 'a'>{});
 static_assert(Variable<'z', 'z'>{}.next()           == Variable<'a', 'a', 'a'>{});
 static_assert(Variable<'z', 'z', 'z'>{}.next()      == Variable<'a', 'a', 'a', 'a'>{});
 static_assert(Variable<'a', '9'>{}.next()           == Variable<'b', 'a'>{});
+
+static_assert(Function<Name<'g'>>{}.prev() ==
+              Function<Name<'f'>>{});
+static_assert(Function<Name<'g'>, Variable<'x'>>{}.prev() ==
+              Function<Name<'f'>, Variable<'x'>>{});
+static_assert(Function<Name<'g'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
+              Function<Name<'f'>, Variable<'x'>, Variable<'x'>>{});
 
 
 } //namespace fol

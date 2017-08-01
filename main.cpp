@@ -18,6 +18,8 @@ int main(void) {
 	Function<Name<'f', '3'>, Variable<'x'>, Variable<'y'>> f3;
 	Function<Name<'f', '4'>, Variable<'x'>, decltype(f2)> f4;
 	
+	auto f5 = f4.next();//.append(f4);
+	
 	std::cout<<x<<' '<<sizeof(x)<<std::endl
 	         <<foo<<' '<<sizeof(foo)<<std::endl
 	         <<bar<<' '<<sizeof(bar)<<std::endl
@@ -25,6 +27,7 @@ int main(void) {
 	         <<f2<<' '<<sizeof(f2)<<std::endl
 	         <<f3<<' '<<sizeof(f3)<<std::endl
 	         <<f4<<' '<<sizeof(f4)<<std::endl
+	         <<f5<<' '<<sizeof(f5)<<std::endl
 	         ;
 	
 	volatile char cX{'x'};
@@ -85,6 +88,23 @@ int main(void) {
 	         <<rtX<<' '<<sizeof(rtX)<<std::endl
 	         <<rtFoo<<' '<<sizeof(rtFoo)<<std::endl
 	         <<rtBar<<' '<<sizeof(rtBar)<<std::endl
+	         ;
+	
+	Function<RtName> mF1{{"f1"}};
+	Function<Name<'f', '2'>, RtVariable> mF2{{}, {{"y"}}};
+	Function<RtName, RtVariable, Variable<'y'>> mF3{{"f3"}, {{"x"}, {}}};
+	Function<Name<'f', '4'>, Variable<'x'>, decltype(mF2)> mF4{{}, {{}, {mF2}}};
+	
+	auto mF5 = mF4.next();//.append(f4);
+	
+	std::cout<<std::endl
+	         <<"   ====    Mixed    ===="<<std::endl
+	         <<std::endl
+	         <<mF1<<' '<<sizeof(mF1)<<std::endl
+	         <<mF2<<' '<<sizeof(mF2)<<std::endl
+	         <<mF3<<' '<<sizeof(mF3)<<std::endl
+	         <<mF4<<' '<<sizeof(mF4)<<std::endl
+	         <<mF5<<' '<<sizeof(mF5)<<std::endl
 	         ;
 	return 0;
 }
