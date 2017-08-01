@@ -16,7 +16,7 @@ template<typename T>
 struct IsTerm : std::false_type { };
 
 template<char... Name>
-struct IsTerm<Variable<Name>> : std::true_type { };
+struct IsTerm<Variable<Name...>> : std::true_type { };
 
 template<>
 struct IsTerm<RtVariable> : std::true_type { };

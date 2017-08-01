@@ -8,7 +8,7 @@
 
 namespace fol {
 
-template<char... Name>
+template<char c, char... Name>
 class Variable;
 
 class RtVariable;
