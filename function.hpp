@@ -12,6 +12,7 @@
 
 #include <ostream>
 #include <tuple>
+#include <type_traits>
 
 namespace fol {
 
@@ -30,16 +31,19 @@ class Function {
 		return;
 	}
 	
-	constexpr auto prev(void) const {
+	constexpr auto prev(void) const
+			noexcept(noexcept(Function::fromName(std::declval<NameT>(), std::declval<std::tuple<Args...>>()))) {
 		return fromName(N.prev(), A);
 	}
 	
-	constexpr auto next(void) const {
+	constexpr auto next(void) const
+			noexcept(noexcept(Function::fromName(std::declval<NameT>(), std::declval<std::tuple<Args...>>()))) {
 		return fromName(N.next(), A);
 	}
 	
 	template<typename Name2>
-	static constexpr Function<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t) {
+	static constexpr Function<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t)
+			noexcept(std::is_nothrow_constructible_v<Function<Name2, Args...>>) {
 		return {n, t};
 	}
 	
