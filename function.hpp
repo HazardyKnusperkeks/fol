@@ -43,6 +43,11 @@ class Function {
 		return {n, t};
 	}
 	
+	template<typename Term, std::enable_if_t<IsTerm<Term>::value>* = nullptr>
+	constexpr auto append(Term t) const {
+		return Function<NameT, Args..., Term>{N, std::tuple_cat(A, std::tuple{std::move(t)})};
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Function& f) {
 		os<<f.N;
 		if constexpr ( sizeof...(Args) >= 1 ) {

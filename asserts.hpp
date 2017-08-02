@@ -43,6 +43,9 @@ static_assert(Function<Name<'g'>, Variable<'x'>>{}.prev() ==
 static_assert(Function<Name<'g'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
               Function<Name<'f'>, Variable<'x'>, Variable<'x'>>{});
 
+static_assert(Function<Name<'f'>, Variable<'x'>>{}.append(Variable<'y'>{}) ==
+              Function<Name<'f'>, Variable<'x'>, Variable<'y'>>{});
+
 
 } //namespace fol
 

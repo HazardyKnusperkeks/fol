@@ -18,7 +18,7 @@ int main(void) {
 	Function<Name<'f', '3'>, Variable<'x'>, Variable<'y'>> f3;
 	Function<Name<'f', '4'>, Variable<'x'>, decltype(f2)> f4;
 	
-	auto f5 = f4.next();//.append(f4);
+	auto f5 = f4.next().append(f4);
 	
 	std::cout<<x<<' '<<sizeof(x)<<std::endl
 	         <<foo<<' '<<sizeof(foo)<<std::endl
@@ -95,7 +95,7 @@ int main(void) {
 	Function<RtName, RtVariable, Variable<'y'>> mF3{{"f3"}, {{"x"}, {}}};
 	Function<Name<'f', '4'>, Variable<'x'>, decltype(mF2)> mF4{{}, {{}, {mF2}}};
 	
-	auto mF5 = mF4.next();//.append(f4);
+	auto mF5 = mF4.next().append(mF4);
 	
 	std::cout<<std::endl
 	         <<"   ====    Mixed    ===="<<std::endl
