@@ -8,6 +8,11 @@
 
 namespace fol {
 
+template<char... String>
+class Name;
+
+class RtName;
+
 template<char c, char... Name>
 class Variable;
 
