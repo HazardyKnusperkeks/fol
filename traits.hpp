@@ -33,6 +33,12 @@ struct IsTerm<RtVariable> : std::true_type { };
 template<typename Name, typename... Args>
 struct IsTerm<Function<Name, Args...>> : std::true_type { };
 
+template<typename T>
+struct IsAtom : std::false_type { };
+
+template<typename Name, typename... Args>
+struct IsAtom<Predicate<Name, Args...>> : std::true_type { };
+
 } //namespace fol
 
 #endif

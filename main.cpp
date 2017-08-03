@@ -1,5 +1,6 @@
 #include "asserts.hpp"
 #include "function.hpp"
+#include "predicate.hpp"
 #include "variable.hpp"
 
 #include <cassert>
@@ -28,6 +29,17 @@ int main(void) {
 	         <<f3<<' '<<sizeof(f3)<<std::endl
 	         <<f4<<' '<<sizeof(f4)<<std::endl
 	         <<f5<<' '<<sizeof(f5)<<std::endl
+	         ;
+	
+	Predicate<Name<'p', '1'>> p1;
+	Predicate<Name<'p', '2'>, Variable<'y'>> p2;
+	Predicate<Name<'p', '3'>, Variable<'x'>, Variable<'y'>> p3;
+	Predicate<Name<'p', '4'>, Variable<'x'>, decltype(f2)> p4;
+	
+	std::cout<<p1<<' '<<sizeof(p1)<<std::endl
+	         <<p2<<' '<<sizeof(p2)<<std::endl
+	         <<p3<<' '<<sizeof(p3)<<std::endl
+	         <<p4<<' '<<sizeof(p4)<<std::endl
 	         ;
 	
 	volatile char cX{'x'};
@@ -105,6 +117,17 @@ int main(void) {
 	         <<mF3<<' '<<sizeof(mF3)<<std::endl
 	         <<mF4<<' '<<sizeof(mF4)<<std::endl
 	         <<mF5<<' '<<sizeof(mF5)<<std::endl
+	         ;
+	
+	Predicate<RtName> mP1{{"p1"}};
+	Predicate<Name<'p', '2'>, RtVariable> mP2{{}, {{"y"}}};
+	Predicate<RtName, RtVariable, Variable<'y'>> mP3{{"p3"}, {{"x"}, {}}};
+	Predicate<Name<'p', '4'>, Variable<'x'>, decltype(mF2)> mP4{{}, {{}, {mF2}}};
+	
+	std::cout<<mP1<<' '<<sizeof(mP1)<<std::endl
+	         <<mP2<<' '<<sizeof(mP2)<<std::endl
+	         <<mP3<<' '<<sizeof(mP3)<<std::endl
+	         <<mP4<<' '<<sizeof(mP4)<<std::endl
 	         ;
 	return 0;
 }

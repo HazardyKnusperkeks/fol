@@ -41,6 +41,7 @@ HEADERS		 = asserts.hpp\
 			   function.hpp\
 			   helper.hpp\
 			   name.hpp\
+			   predicate.hpp\
 			   traits.hpp\
 			   variable.hpp
 

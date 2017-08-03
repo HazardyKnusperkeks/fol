@@ -7,6 +7,7 @@
 #define FOL_ASSERTS_HPP
 
 #include "function.hpp"
+#include "predicate.hpp"
 #include "variable.hpp"
 
 #include <type_traits>
@@ -71,6 +72,24 @@ static_assert(noexcept(std::declval<Function<Name<'f'>>>().next()));
 static_assert(Function<Name<'f'>, Variable<'x'>>{}.append(Variable<'y'>{}) ==
               Function<Name<'f'>, Variable<'x'>, Variable<'y'>>{});
 
+static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>>, Name<'f'>>);
+static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>>);
+static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
+static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
+static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
+
+//This does not hold as of C++17
+//static_assert(std::is_nothrow_constructible_v<std::tuple<Variable<'x'>>, Variable<'x'>>);
+//static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>, Variable<'x'>>);
+
+static_assert(Predicate<Name<'q'>>{}.prev() ==
+              Predicate<Name<'p'>>{});
+static_assert(Predicate<Name<'q'>, Variable<'x'>>{}.prev() ==
+              Predicate<Name<'p'>, Variable<'x'>>{});
+static_assert(Predicate<Name<'q'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
+              Predicate<Name<'p'>, Variable<'x'>, Variable<'x'>>{});
+static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().prev()));
+static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().next()));
 
 } //namespace fol
 

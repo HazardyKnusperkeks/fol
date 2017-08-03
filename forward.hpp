@@ -21,6 +21,9 @@ class RtVariable;
 template<typename Name, typename... Args>
 class Function;
 
+template<typename Name, typename... Args>
+class Predicate;
+
 } //namespace fol
 
 #endif
