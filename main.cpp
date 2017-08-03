@@ -1,4 +1,5 @@
 #include "asserts.hpp"
+#include "equality.hpp"
 #include "function.hpp"
 #include "predicate.hpp"
 #include "variable.hpp"
@@ -41,6 +42,9 @@ int main(void) {
 	         <<p3<<' '<<sizeof(p3)<<std::endl
 	         <<p4<<' '<<sizeof(p4)<<std::endl
 	         ;
+	
+	Equality<Variable<'x'>, Variable<'y'>> e;
+	std::cout<<e<<' '<<sizeof(e)<<std::endl;
 	
 	volatile char cX{'x'};
 	
@@ -102,6 +106,9 @@ int main(void) {
 	         <<rtBar<<' '<<sizeof(rtBar)<<std::endl
 	         ;
 	
+	Equality<RtVariable, RtVariable> rE{{'x'}, {"y"}};
+	std::cout<<rE<<' '<<sizeof(rE)<<std::endl;
+	
 	Function<RtName> mF1{{"f1"}};
 	Function<Name<'f', '2'>, RtVariable> mF2{{}, {{"y"}}};
 	Function<RtName, RtVariable, Variable<'y'>> mF3{{"f3"}, {{"x"}, {}}};
@@ -129,5 +136,8 @@ int main(void) {
 	         <<mP3<<' '<<sizeof(mP3)<<std::endl
 	         <<mP4<<' '<<sizeof(mP4)<<std::endl
 	         ;
+	
+	Equality<Variable<'x'>, RtVariable> mE{{}, {'y'}};
+	std::cout<<mE<<' '<<sizeof(mE)<<std::endl;
 	return 0;
 }

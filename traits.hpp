@@ -39,6 +39,9 @@ struct IsAtom : std::false_type { };
 template<typename Name, typename... Args>
 struct IsAtom<Predicate<Name, Args...>> : std::true_type { };
 
+template<typename T1, typename T2>
+struct IsAtom<Equality<T1, T2>> : std::true_type { };
+
 } //namespace fol
 
 #endif

@@ -24,6 +24,9 @@ class Function;
 template<typename Name, typename... Args>
 class Predicate;
 
+template<typename T1, typename T2>
+class Equality;
+
 } //namespace fol
 
 #endif

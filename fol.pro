@@ -37,6 +37,7 @@ gcc {
 SOURCES		 = main.cpp
 
 HEADERS		 = asserts.hpp\
+			   equality.hpp\
 			   forward.hpp\
 			   function.hpp\
 			   helper.hpp\
