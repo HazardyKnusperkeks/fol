@@ -42,6 +42,12 @@ struct IsAtom<Predicate<Name, Args...>> : std::true_type { };
 template<typename T1, typename T2>
 struct IsAtom<Equality<T1, T2>> : std::true_type { };
 
+template<typename T>
+struct IsFormula : std::conditional_t<IsAtom<T>::value, std::true_type, std::false_type> { };
+
+static_assert(IsFormula<Predicate<RtName>>::value);
+static_assert(!IsFormula<Function<RtName>>::value);
+
 } //namespace fol
 
 #endif
