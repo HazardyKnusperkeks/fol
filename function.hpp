@@ -27,7 +27,9 @@ class Function {
 	public:
 	constexpr Function(void) = default;
 	
-	constexpr Function(NameT n, std::tuple<Args...> t = {}) : N(std::move(n)), A(std::move(t)) {
+	constexpr Function(NameT n, std::tuple<Args...> t = {})
+			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
+			         std::is_nothrow_move_constructible_v<std::tuple<Args...>>) : N(std::move(n)), A(std::move(t)) {
 		return;
 	}
 	

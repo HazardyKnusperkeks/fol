@@ -9,7 +9,14 @@
 #include "function.hpp"
 #include "variable.hpp"
 
+#include <type_traits>
+
 namespace fol {
+
+static_assert(std::is_nothrow_default_constructible_v<Variable<'x'>>);
+static_assert(std::is_nothrow_default_constructible_v<Variable<'x', 'y'>>);
+static_assert(std::is_nothrow_move_constructible_v<Variable<'x'>>);
+static_assert(std::is_nothrow_move_constructible_v<Variable<'x', 'y'>>);
 
 static_assert(Variable<'x'>{}   == Variable<'x'>{});
 static_assert(!(Variable<'x'>{} != Variable<'x'>{}));
@@ -38,6 +45,16 @@ static_assert(Variable<'z', 'z', 'z'>{}.next()      == Variable<'a', 'a', 'a', '
 static_assert(Variable<'a', '9'>{}.next()           == Variable<'b', 'a'>{});
 static_assert(noexcept(std::declval<Variable<'b'>>().prev()));
 
+static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>>, Name<'f'>>);
+static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>>);
+static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
+static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
+static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
+
+//This does not hold as of C++17
+//static_assert(std::is_nothrow_constructible_v<std::tuple<Variable<'x'>>, Variable<'x'>>);
+//static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>, Variable<'x'>>);
+
 static_assert(Function<Name<'g'>>{}.prev() ==
               Function<Name<'f'>>{});
 static_assert(Function<Name<'g'>, Variable<'x'>>{}.prev() ==
@@ -46,6 +63,10 @@ static_assert(Function<Name<'g'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
               Function<Name<'f'>, Variable<'x'>, Variable<'x'>>{});
 static_assert(noexcept(std::declval<Function<Name<'f'>>>().prev()));
 static_assert(noexcept(std::declval<Function<Name<'f'>>>().next()));
+
+//Because of the not nothrow constructors of tuple this can't be nothrow either.
+//static_assert(noexcept(std::declval<Function<Name<'f'>, Variable<'x'>>>().prev()));
+//static_assert(noexcept(std::declval<Function<Name<'f'>, Variable<'x'>>>().next()));
 
 static_assert(Function<Name<'f'>, Variable<'x'>>{}.append(Variable<'y'>{}) ==
               Function<Name<'f'>, Variable<'x'>, Variable<'y'>>{});
