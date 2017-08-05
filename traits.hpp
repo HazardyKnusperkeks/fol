@@ -48,6 +48,9 @@ struct IsFormula : std::conditional_t<IsAtom<T>::value, std::true_type, std::fal
 static_assert(IsFormula<Predicate<RtName>>::value);
 static_assert(!IsFormula<Function<RtName>>::value);
 
+template<typename T>
+struct IsFormula<Not<T>> : std::true_type { };
+
 } //namespace fol
 
 #endif
