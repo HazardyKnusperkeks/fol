@@ -20,24 +20,16 @@ struct Not {
 	friend std::ostream& operator<<(std::ostream& os, const Not& n) {
 		return os<<'-'<<n.t;
 	}
-	
-	constexpr bool operator==(const Not& n) noexcept {
-		return t == n.t;
-	}
-	
-	constexpr bool operator!=(const Not& n) noexcept {
-		return !operator==(n);
-	}
 };
 
 template<typename T1, typename T2>
-constexpr bool operator==(const Not<T1>, const Not<T2>) noexcept {
-	return false;
+constexpr bool operator==(const Not<T1>& n1, const Not<T2>& n2) noexcept {
+	return n1.t == n2.t;
 }
 
 template<typename T1, typename T2>
-constexpr bool operator!=(const Not<T1>, const Not<T2>) noexcept {
-	return true;
+constexpr bool operator!=(const Not<T1>& n1, const Not<T2>& n2) noexcept {
+	return !(n1 == n2);
 }
 
 }

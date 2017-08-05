@@ -83,7 +83,7 @@ struct RtVariable {
 	
 	template<char... String>
 	friend bool operator==(const RtVariable& v1, const Variable<String...> v2) noexcept {
-		return compare(v2.N, v1.Name);
+		return v2.N == v1.Name;
 	}
 	
 	template<char... String>

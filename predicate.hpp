@@ -55,21 +55,15 @@ struct Predicate {
 		} //if constexpr ( sizeof...(Args) >= 1 )
 		return os;
 	}
-	
-	template<typename Name1T, typename Name2T, typename... Args1, typename... Args2>
-	friend constexpr bool operator==(const Predicate<Name1T, Args1...> p1, const Predicate<Name2T, Args2...> p2) noexcept;
-	
-	template<typename Name1T, typename Name2T, typename... Args1, typename... Args2>
-	friend constexpr bool operator!=(const Predicate<Name1T, Args1...> p1, const Predicate<Name2T, Args2...> p2) noexcept;
 };
 
 template<typename Name1T, typename Name2T, typename... Args1, typename... Args2>
-constexpr bool operator==(const Predicate<Name1T, Args1...> p1, const Predicate<Name2T, Args2...> p2) noexcept {
-	return p1.N == p2.N && p1.A == p2.A;
+constexpr bool operator==(const Predicate<Name1T, Args1...>& p1, const Predicate<Name2T, Args2...>& p2) noexcept {
+	return sizeof...(Args1) == sizeof...(Args2) && p1.N == p2.N && p1.A == p2.A;
 }
 
 template<typename Name1T, typename Name2T, typename... Args1, typename... Args2>
-constexpr bool operator!=(const Predicate<Name1T, Args1...> p1, const Predicate<Name2T, Args2...> p2) noexcept {
+constexpr bool operator!=(const Predicate<Name1T, Args1...>& p1, const Predicate<Name2T, Args2...>& p2) noexcept {
 	return !(p1 == p2);
 }
 

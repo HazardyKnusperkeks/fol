@@ -257,11 +257,31 @@ class RtName {
 	}
 	
 	template<char... String>
-	friend bool compare(const fol::Name<String...>, const RtName& name) noexcept {
+	static bool compare(const fol::Name<String...>, const RtName& name) noexcept {
 		auto str = std::array{String...};
 		return std::equal(str.begin(), str.end(), name.Name.begin(), name.Name.end());
 	}
 };
+
+template<char... String>
+bool operator==(const RtName& rt, const Name<String...> n) noexcept {
+	return RtName::compare(n, rt);
+}
+
+template<char... String>
+bool operator==(const Name<String...> n, const RtName& rt) noexcept {
+	return RtName::compare(n, rt);
+}
+
+template<char... String>
+bool operator!=(const RtName& rt, const Name<String...> n) noexcept {
+	return !(rt == n);
+}
+
+template<char... String>
+bool operator!=(const Name<String...> n, const RtName& rt) noexcept {
+	return !(n == rt);
+}
 
 } //namespace fol
 
