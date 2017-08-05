@@ -63,6 +63,21 @@ struct IsFormula<Implies<T1, T2>> : std::true_type { };
 template<typename T1, typename T2>
 struct IsFormula<Equivalent<T1, T2>> : std::true_type { };
 
+template<typename Var, typename Form>
+struct IsFormula<Exists<Var, Form>> : std::true_type { };
+
+template<typename Var, typename Form>
+struct IsFormula<ForAll<Var, Form>> : std::true_type { };
+
+template<typename T>
+struct IsQuantifier : std::false_type { };
+
+template<typename Var, typename Form>
+struct IsQuantifier<Exists<Var, Form>> : std::true_type { };
+
+template<typename Var, typename Form>
+struct IsQuantifier<ForAll<Var, Form>> : std::true_type { };
+
 } //namespace fol
 
 #endif

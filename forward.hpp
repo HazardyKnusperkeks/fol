@@ -42,6 +42,12 @@ struct Implies;
 template<typename T1, typename T2>
 struct Equivalent;
 
+template<typename Var, typename Form>
+struct Exists;
+
+template<typename Var, typename Form>
+struct ForAll;
+
 } //namespace fol
 
 #endif

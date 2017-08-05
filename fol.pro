@@ -40,6 +40,8 @@ HEADERS		 = and.hpp\
 			   asserts.hpp\
 			   equality.hpp\
 			   equivalent.hpp\
+			   exists.hpp\
+			   forall.hpp\
 			   forward.hpp\
 			   function.hpp\
 			   helper.hpp\
