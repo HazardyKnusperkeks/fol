@@ -44,6 +44,7 @@ HEADERS		 = and.hpp\
 			   helper.hpp\
 			   name.hpp\
 			   not.hpp\
+			   or.hpp\
 			   predicate.hpp\
 			   traits.hpp\
 			   variable.hpp

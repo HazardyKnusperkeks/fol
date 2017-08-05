@@ -33,6 +33,9 @@ struct Not;
 template<typename... Ts>
 struct And;
 
+template<typename... Ts>
+struct Or;
+
 } //namespace fol
 
 #endif

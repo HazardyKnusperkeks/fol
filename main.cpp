@@ -3,6 +3,7 @@
 #include "equality.hpp"
 #include "function.hpp"
 #include "not.hpp"
+#include "or.hpp"
 #include "predicate.hpp"
 #include "variable.hpp"
 

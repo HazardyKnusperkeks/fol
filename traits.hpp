@@ -54,6 +54,9 @@ struct IsFormula<Not<T>> : std::true_type { };
 template<typename... Ts>
 struct IsFormula<And<Ts...>> : std::true_type { };
 
+template<typename... Ts>
+struct IsFormula<Or<Ts...>> : std::true_type { };
+
 } //namespace fol
 
 #endif
