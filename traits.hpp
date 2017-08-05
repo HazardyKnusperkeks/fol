@@ -51,6 +51,9 @@ static_assert(!IsFormula<Function<RtName>>::value);
 template<typename T>
 struct IsFormula<Not<T>> : std::true_type { };
 
+template<typename... Ts>
+struct IsFormula<And<Ts...>> : std::true_type { };
+
 } //namespace fol
 
 #endif

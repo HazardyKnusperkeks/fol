@@ -1,3 +1,4 @@
+#include "and.hpp"
 #include "asserts.hpp"
 #include "equality.hpp"
 #include "function.hpp"
@@ -46,6 +47,9 @@ int main(void) {
 	
 	Equality<Variable<'x'>, Variable<'y'>> e;
 	std::cout<<e<<' '<<sizeof(e)<<std::endl;
+	
+	And<Not<decltype(p1)>, decltype(p2)> a;
+	std::cout<<a<<' '<<sizeof(a)<<std::endl;
 	
 	volatile char cX{'x'};
 	
@@ -140,5 +144,9 @@ int main(void) {
 	
 	Equality<Variable<'x'>, RtVariable> mE{{}, {'y'}};
 	std::cout<<mE<<' '<<sizeof(mE)<<std::endl;
+	
+	And<Not<decltype(mP1)>, decltype(mP2)> mA{{{{mP1}}, {mP2}}};
+	std::cout<<mA<<' '<<sizeof(mA)<<std::endl;
+	assert(a == mA);
 	return 0;
 }

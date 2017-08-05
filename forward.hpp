@@ -30,6 +30,9 @@ struct Equality;
 template<typename T>
 struct Not;
 
+template<typename... Ts>
+struct And;
+
 } //namespace fol
 
 #endif
