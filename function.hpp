@@ -17,14 +17,13 @@
 namespace fol {
 
 template<typename NameT, typename... Args>
-class Function {
+struct Function {
 	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
 	NameT N;
 	std::tuple<Args...> A;
 	
-	public:
 	constexpr Function(void) = default;
 	
 	constexpr Function(NameT n, std::tuple<Args...> t = {})

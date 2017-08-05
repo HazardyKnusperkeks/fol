@@ -14,18 +14,21 @@ class Name;
 class RtName;
 
 template<char c, char... Name>
-class Variable;
+struct Variable;
 
-class RtVariable;
-
-template<typename Name, typename... Args>
-class Function;
+struct RtVariable;
 
 template<typename Name, typename... Args>
-class Predicate;
+struct Function;
+
+template<typename Name, typename... Args>
+struct Predicate;
 
 template<typename T1, typename T2>
-class Equality;
+struct Equality;
+
+template<typename T>
+struct Not;
 
 } //namespace fol
 

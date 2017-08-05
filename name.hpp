@@ -16,7 +16,7 @@
 namespace fol {
 
 template<char... String>
-class Name;
+struct Name;
 
 namespace details {
 constexpr char toLower(const char c) noexcept {
@@ -136,6 +136,7 @@ constexpr auto nameNext(const Name<String...>) noexcept {
 template<char... String>
 class Name {
 	static_assert(sizeof...(String) >= 1, "The name must not be empty!");
+	
 	public:
 	template<std::size_t N>
 	using Char   = std::integral_constant<char, details::NameChar<N, String...>::c>;
@@ -176,6 +177,7 @@ std::ostream& operator<<(std::ostream& os, const Name<String...>) noexcept {
 
 class RtName {
 	std::string Name;
+	
 	public:
 	RtName(const char c) : Name{&c, 1} { return; }
 	RtName(std::string name) : Name{std::move(name)} {

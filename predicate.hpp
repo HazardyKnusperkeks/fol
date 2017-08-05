@@ -15,14 +15,13 @@
 namespace fol {
 
 template<typename NameT, typename... Args>
-class Predicate {
+struct Predicate {
 	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
 	NameT N;
 	std::tuple<Args...> A;
 	
-	public:
 	using Arity = std::integral_constant<std::size_t, sizeof...(Args)>;
 	
 	constexpr Predicate(void) = default;

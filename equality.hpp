@@ -14,13 +14,12 @@
 namespace fol {
 
 template<typename T1, typename T2>
-class Equality {
+struct Equality {
 	static_assert(IsTerm<T1>::value && IsTerm<T2>::value, "Equality is only defined for two terms!");
 	
 	T1 Term1;
 	T2 Term2;
 	
-	public:
 	constexpr Equality(void) = default;
 	
 	constexpr Equality(T1 t1, T2 t2)

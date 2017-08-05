@@ -14,8 +14,7 @@
 namespace fol {
 
 template<char c, char... String>
-class Variable {
-	public:
+struct Variable {
 	Name<c,String...> N;
 	
 	constexpr auto prev(void) const noexcept {
@@ -47,10 +46,9 @@ std::ostream& operator<<(std::ostream& os, const Variable<String...> v) {
 	return os<<v.N;
 }
 
-class RtVariable {
+struct RtVariable {
 	RtName Name;
 	
-	public:
 	RtVariable(const char c) : Name{c} { return; }
 	RtVariable(std::string name) : Name{std::move(name)} {
 		return;
