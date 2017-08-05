@@ -42,6 +42,7 @@ HEADERS		 = and.hpp\
 			   forward.hpp\
 			   function.hpp\
 			   helper.hpp\
+			   implies.hpp\
 			   name.hpp\
 			   not.hpp\
 			   or.hpp\
