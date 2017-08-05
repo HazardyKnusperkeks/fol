@@ -39,6 +39,9 @@ struct Or;
 template<typename T1, typename T2>
 struct Implies;
 
+template<typename T1, typename T2>
+struct Equivalent;
+
 } //namespace fol
 
 #endif

@@ -39,6 +39,7 @@ SOURCES		 = main.cpp
 HEADERS		 = and.hpp\
 			   asserts.hpp\
 			   equality.hpp\
+			   equivalent.hpp\
 			   forward.hpp\
 			   function.hpp\
 			   helper.hpp\
