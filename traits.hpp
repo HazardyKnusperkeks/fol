@@ -22,13 +22,16 @@ template<>
 struct IsName<RtName> : std::true_type { };
 
 template<typename T>
-struct IsTerm : std::false_type { };
+struct IsVariable : std::false_type { };
 
 template<char... Name>
-struct IsTerm<Variable<Name...>> : std::true_type { };
+struct IsVariable<Variable<Name...>> : std::true_type { };
 
 template<>
-struct IsTerm<RtVariable> : std::true_type { };
+struct IsVariable<RtVariable> : std::true_type { };
+
+template<typename T>
+struct IsTerm : std::conditional_t<IsVariable<T>::value, std::true_type, std::false_type> { };
 
 template<typename Name, typename... Args>
 struct IsTerm<Function<Name, Args...>> : std::true_type { };
