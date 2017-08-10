@@ -33,7 +33,7 @@ constexpr bool operator==(const Implies<T11, T12>& i1, const Implies<T21, T22>& 
 
 template<typename T11, typename T12, typename T21, typename T22>
 constexpr bool operator!=(const Implies<T11, T12>& i1, const Implies<T21, T22>& i2) noexcept {
-	return !(t1 == t2);
+	return !(i1 == i2);
 }
 
 } //namespace fol
