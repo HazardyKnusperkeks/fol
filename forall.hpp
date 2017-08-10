@@ -19,8 +19,8 @@ struct ForAll {
 	Var v;
 	Form f;
 	
-	friend std::ostream& operator<<(std::ostream& os, const ForAll& e) {
-		return os<<'E'<<var<<": "<<f;
+	friend std::ostream& operator<<(std::ostream& os, const ForAll& f) {
+		return os<<'A'<<f.v<<": "<<f.f;
 	}
 };
 
