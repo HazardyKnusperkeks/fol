@@ -20,7 +20,7 @@ struct Exists {
 	Form f;
 	
 	friend std::ostream& operator<<(std::ostream& os, const Exists& e) {
-		return os<<'E'<<var<<": "<<f;
+		return os<<'E'<<e.v<<": "<<e.f;
 	}
 };
 
