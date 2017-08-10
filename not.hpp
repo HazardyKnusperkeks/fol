@@ -22,6 +22,9 @@ struct Not {
 	}
 };
 
+template<typename T>
+Not(T) -> Not<T>;
+
 template<typename T1, typename T2>
 constexpr bool operator==(const Not<T1>& n1, const Not<T2>& n2) noexcept {
 	return n1.t == n2.t;

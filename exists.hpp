@@ -24,6 +24,9 @@ struct Exists {
 	}
 };
 
+template<typename Var, typename Form>
+Exists(Var, Form) -> Exists<Var, Form>;
+
 template<typename Var1, typename Form1, typename Var2, typename Form2>
 constexpr bool operator==(const Exists<Var1, Form1>& e1, const Exists<Var2, Form2>& e2) noexcept {
 	return e1.v == e2.v && e1.f == e2.f;

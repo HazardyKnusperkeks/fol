@@ -33,6 +33,9 @@ struct Equality {
 	}
 };
 
+template<typename T1, typename T2>
+Equality(T1, T2) -> Equality<T1, T2>;
+
 }
 
 #endif

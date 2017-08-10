@@ -47,12 +47,12 @@ static_assert(Variable<'a', '9'>{}.next()           == Variable<'b', 'a'>{});
 static_assert(noexcept(std::declval<Variable<'b'>>().prev()));
 
 static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>>, Name<'f'>>);
-static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>>);
 static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
 
 //This does not hold as of C++17
+//static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>>);
 //static_assert(std::is_nothrow_constructible_v<std::tuple<Variable<'x'>>, Variable<'x'>>);
 //static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>, Variable<'x'>>);
 
@@ -73,12 +73,12 @@ static_assert(Function<Name<'f'>, Variable<'x'>>{}.append(Variable<'y'>{}) ==
               Function<Name<'f'>, Variable<'x'>, Variable<'y'>>{});
 
 static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>>, Name<'f'>>);
-static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>>);
 static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
 
 //This does not hold as of C++17
+//static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>>);
 //static_assert(std::is_nothrow_constructible_v<std::tuple<Variable<'x'>>, Variable<'x'>>);
 //static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>, Variable<'x'>>);
 

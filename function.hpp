@@ -18,6 +18,19 @@ namespace fol {
 
 template<typename NameT, typename... Args>
 struct Function {
+	template<typename Name2, std::size_t... Idx>
+	static constexpr Function<Name2, Args...> fromNameImpl(const Name2& n, const std::tuple<Args...>& t,
+	                                                        std::index_sequence<Idx...>)
+			noexcept(std::is_nothrow_constructible_v<Function<Name2, Args...>, const Name2&, const Args&...>) {
+		return {n, std::get<Idx>(t)...};
+	}
+	
+	template<typename Term, std::size_t... Idx>
+	constexpr auto appendImpl(Term t, std::index_sequence<Idx...>) const {
+		return Function<NameT, Args..., Term>{N, std::get<Idx>(A)..., std::move(t)};
+	}
+	
+	public:
 	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
@@ -26,9 +39,11 @@ struct Function {
 	
 	constexpr Function(void) = default;
 	
-	constexpr Function(NameT n, std::tuple<Args...> t = {})
+	constexpr Function(NameT n, Args... a)
 			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
-			         std::is_nothrow_move_constructible_v<std::tuple<Args...>>) : N(std::move(n)), A(std::move(t)) {
+			         (std::is_nothrow_move_constructible_v<Args> && ...) &&
+			         noexcept(std::make_tuple(std::move(a)...))) : N(std::move(n)),
+			A(std::make_tuple(std::move(a)...)) {
 		return;
 	}
 	
@@ -45,12 +60,12 @@ struct Function {
 	template<typename Name2>
 	static constexpr Function<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t)
 			noexcept(std::is_nothrow_constructible_v<Function<Name2, Args...>>) {
-		return {n, t};
+		return fromNameImpl(n, t, std::index_sequence_for<Args...>());
 	}
 	
 	template<typename Term, std::enable_if_t<IsTerm<Term>::value>* = nullptr>
 	constexpr auto append(Term t) const {
-		return Function<NameT, Args..., Term>{N, std::tuple_cat(A, std::tuple{std::move(t)})};
+		return appendImpl(t, std::index_sequence_for<Args...>());
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const Function& f) {

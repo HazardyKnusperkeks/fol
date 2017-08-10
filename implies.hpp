@@ -23,6 +23,9 @@ struct Implies {
 	}
 };
 
+template<typename T1, typename T2>
+Implies(T1, T2) -> Implies<T1, T2>;
+
 template<typename T11, typename T12, typename T21, typename T22>
 constexpr bool operator==(const Implies<T11, T12>& i1, const Implies<T21, T22>& i2) noexcept {
 	return i1.t1 == i2.t1 && i1.t2 == i2.t2;

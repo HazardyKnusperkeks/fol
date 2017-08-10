@@ -20,6 +20,12 @@ struct And {
 	
 	std::tuple<Ts...> ts;
 	
+	constexpr And(void) = default;
+	constexpr And(Ts... t) noexcept((std::is_nothrow_move_constructible_v<Ts> && ...) &&
+	                                noexcept(std::make_tuple(std::move(t)...))) : ts(std::make_tuple(std::move(t)...)) {
+		return;
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const And& a) {
 		return details::print(os, a.ts, " & ");
 	}

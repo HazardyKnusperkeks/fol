@@ -16,6 +16,15 @@ namespace fol {
 
 template<typename NameT, typename... Args>
 struct Predicate {
+	private:
+	template<typename Name2, std::size_t... Idx>
+	static constexpr Predicate<Name2, Args...> fromNameImpl(const Name2& n, const std::tuple<Args...>& t,
+	                                                        std::index_sequence<Idx...>)
+			noexcept(std::is_nothrow_constructible_v<Predicate<Name2, Args...>, const Name2&, const Args&...>) {
+		return {n, std::get<Idx>(t)...};
+	}
+	
+	public:
 	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
@@ -26,9 +35,11 @@ struct Predicate {
 	
 	constexpr Predicate(void) = default;
 	
-	constexpr Predicate(NameT n, std::tuple<Args...> t = {})
+	constexpr Predicate(NameT n, Args... a)
 			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
-			         std::is_nothrow_move_constructible_v<std::tuple<Args...>>) : N(std::move(n)), A(std::move(t)) {
+			         (std::is_nothrow_move_constructible_v<Args> && ...) &&
+			         noexcept(std::make_tuple(std::move(a)...))) : N(std::move(n)),
+			A(std::make_tuple(std::move(a)...)) {
 		return;
 	}
 	
@@ -44,8 +55,8 @@ struct Predicate {
 	
 	template<typename Name2>
 	static constexpr Predicate<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t)
-			noexcept(std::is_nothrow_constructible_v<Predicate<Name2, Args...>>) {
-		return {n, t};
+			noexcept(std::is_nothrow_constructible_v<Predicate<Name2, Args...>, const Name2&, const Args&...>) {
+		return fromNameImpl(n, t, std::index_sequence_for<Args...>());
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const Predicate& p) {
