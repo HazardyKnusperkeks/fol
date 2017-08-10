@@ -28,13 +28,13 @@ template<typename Var, typename Form>
 ForAll(Var, Form) -> ForAll<Var, Form>;
 
 template<typename Var1, typename Form1, typename Var2, typename Form2>
-constexpr bool operator==(const ForAll<Var1, Form1>& e1, const ForAll<Var2, Form2>& e2) noexcept {
-	return e1.v == e2.v && e1.f == e2.f;
+constexpr bool operator==(const ForAll<Var1, Form1>& f1, const ForAll<Var2, Form2>& f2) noexcept {
+	return f1.v == f2.v && f1.f == f2.f;
 }
 
 template<typename Var1, typename Form1, typename Var2, typename Form2>
-constexpr bool operator!=(const ForAll<Var1, Form1>& e1, const ForAll<Var2, Form2>& e2) noexcept {
-	return !(e1 == e2);
+constexpr bool operator!=(const ForAll<Var1, Form1>& f1, const ForAll<Var2, Form2>& f2) noexcept {
+	return !(f1 == f2);
 }
 
 } //namespace fol
