@@ -18,8 +18,8 @@ struct Equivalent {
 	T1 t1;
 	T2 t2;
 	
-	friend std::ostream& operator<<(std::ostream& os, const Equivalent& i) {
-		return os<<i.t1<<" -> "<<i.t2;
+	friend std::ostream& operator<<(std::ostream& os, const Equivalent& e) {
+		return os<<e.t1<<" -> "<<e.t2;
 	}
 };
 
@@ -27,13 +27,13 @@ template<typename T1, typename T2>
 Equivalent(T1, T2) -> Equivalent<T1, T2>;
 
 template<typename T11, typename T12, typename T21, typename T22>
-constexpr bool operator==(const Equivalent<T11, T12>& i1, const Equivalent<T21, T22>& i2) noexcept {
-	return i1.t1 == i2.t1 && i1.t2 == i2.t2;
+constexpr bool operator==(const Equivalent<T11, T12>& e1, const Equivalent<T21, T22>& e2) noexcept {
+	return e1.t1 == e2.t1 && e1.t2 == e2.t2;
 }
 
 template<typename T11, typename T12, typename T21, typename T22>
-constexpr bool operator!=(const Equivalent<T11, T12>& i1, const Equivalent<T21, T22>& i2) noexcept {
-	return !(t1 == t2);
+constexpr bool operator!=(const Equivalent<T11, T12>& e1, const Equivalent<T21, T22>& e2) noexcept {
+	return !(e1 == e2);
 }
 
 } //namespace fol
