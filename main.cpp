@@ -18,17 +18,17 @@
 using namespace fol;
 
 int main(void) {
-	Variable<'x'> x;
-	Variable<'F', 'o', 'o'> foo;
+	constexpr Variable<'x'> x;
+	constexpr Variable<'F', 'o', 'o'> foo;
 	
-	auto bar = foo.prev();
+	constexpr auto bar = foo.prev();
 	
-	Function<Name<'f', '1'>> f1;
-	Function<Name<'f', '2'>, Variable<'y'>> f2;
-	Function<Name<'f', '3'>, Variable<'x'>, Variable<'y'>> f3;
-	Function<Name<'f', '4'>, Variable<'x'>, decltype(f2)> f4;
+	constexpr Function<Name<'f', '1'>> f1;
+	constexpr Function<Name<'f', '2'>, Variable<'y'>> f2;
+	constexpr Function<Name<'f', '3'>, Variable<'x'>, Variable<'y'>> f3;
+	constexpr Function<Name<'f', '4'>, Variable<'x'>, std::decay_t<decltype(f2)>> f4;
 	
-	auto f5 = f4.next().append(f4);
+	constexpr auto f5 = f4.next().append(f4);
 	
 	std::cout<<x<<' '<<sizeof(x)<<std::endl
 	         <<foo<<' '<<sizeof(foo)<<std::endl
@@ -40,10 +40,10 @@ int main(void) {
 	         <<f5<<' '<<sizeof(f5)<<std::endl
 	         ;
 	
-	Predicate<Name<'p', '1'>> p1;
-	Predicate<Name<'p', '2'>, Variable<'y'>> p2;
-	Predicate<Name<'p', '3'>, Variable<'x'>, Variable<'y'>> p3;
-	Predicate<Name<'p', '4'>, Variable<'x'>, decltype(f2)> p4;
+	constexpr Predicate<Name<'p', '1'>> p1;
+	constexpr Predicate<Name<'p', '2'>, Variable<'y'>> p2;
+	constexpr Predicate<Name<'p', '3'>, Variable<'x'>, Variable<'y'>> p3;
+	constexpr Predicate<Name<'p', '4'>, Variable<'x'>, std::decay_t<decltype(f2)>> p4;
 	
 	std::cout<<p1<<' '<<sizeof(p1)<<std::endl
 	         <<p2<<' '<<sizeof(p2)<<std::endl
@@ -51,10 +51,10 @@ int main(void) {
 	         <<p4<<' '<<sizeof(p4)<<std::endl
 	         ;
 	
-	Equality<Variable<'x'>, Variable<'y'>> e;
+	constexpr Equality<Variable<'x'>, Variable<'y'>> e;
 	std::cout<<e<<' '<<sizeof(e)<<std::endl;
 	
-	And<Not<decltype(p1)>, decltype(p2)> a;
+	constexpr And<Not<std::decay_t<decltype(p1)>>, std::decay_t<decltype(p2)>> a;
 	std::cout<<a<<' '<<sizeof(a)<<std::endl;
 	
 	volatile char cX{'x'};
