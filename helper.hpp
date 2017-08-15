@@ -47,6 +47,21 @@ std::ostream& prettyPrint(std::ostream& os, const std::tuple<Ts...>& t, const in
 	return prettyPrint(os, t, index, delimiter, std::index_sequence_for<Ts...>{});
 }
 
+template<typename Tuple, std::size_t I>
+constexpr auto simplifiedTupleImpl(const Tuple& t, const std::index_sequence<I>) {
+	return std::tuple{std::get<I>(t).simplified()};
+}
+
+template<typename Tuple, std::size_t I1, std::size_t I2, std::size_t... Is>
+constexpr auto simplifiedTupleImpl(const Tuple &t, const std::index_sequence<I1, I2, Is...>) {
+	return std::tuple_cat(std::tuple{std::get<I1>(t).simplified()}, simplifiedTupleImpl(t, std::index_sequence<I2, Is...>{}));
+}
+
+template<typename... Ts>
+constexpr auto simplifiedTuple(const std::tuple<Ts...>& t) {
+	return simplifiedTupleImpl(t, std::index_sequence_for<Ts...>());
+}
+
 }
 
 template<typename T>

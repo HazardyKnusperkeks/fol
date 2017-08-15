@@ -1,7 +1,11 @@
 #include "and.hpp"
 #include "asserts.hpp"
 #include "equality.hpp"
+#include "equivalent.hpp"
+#include "exists.hpp"
+#include "forall.hpp"
 #include "function.hpp"
+#include "implies.hpp"
 #include "not.hpp"
 #include "or.hpp"
 #include "predicate.hpp"
@@ -151,6 +155,20 @@ int main(void) {
 	std::cout<<mA<<' '<<sizeof(mA)<<std::endl;
 	assert(a == mA);
 	
+	static_assert(x == Variable<'x'>{});
+	constexpr auto y = Variable<'y'>{};
+	constexpr auto z = Variable<'z'>{};
+	
+	constexpr auto lovesPred = [](auto... par) noexcept {
+			return Predicate{Name<'L', 'o', 'v', 'e', 's'>{}, par...};
+		};
+	
+	constexpr auto leftImplication = Implies{Predicate{Name<'A', 'n', 'i', 'm', 'a', 'l'>{}, y}, lovesPred(x, y)};
+	constexpr auto innerFormula = Implies{ForAll{y, leftImplication}, Exists{y, lovesPred(y, x)}};
+	
+	constexpr auto formula = ForAll{x, innerFormula};
+	constexpr auto simplified = formula.simplified();
+	
 	constexpr auto andOr = And{lovesPred(x), Or{lovesPred(y), lovesPred(z)}};
 	constexpr auto orAnd = Or{And{lovesPred(x), lovesPred(y)}, lovesPred(z)};
 	
@@ -158,6 +176,8 @@ int main(void) {
 	         <<"   ====   Formula   ===="<<std::endl
 	         <<std::endl
 	         <<"AndOr: "<<andOr<<" -- "<<PrettyPrinter{andOr}<<std::endl
-	         <<"OrAnd: "<<orAnd<<" -- "<<PrettyPrinter{orAnd}<<std::endl;
+	         <<"OrAnd: "<<orAnd<<" -- "<<PrettyPrinter{orAnd}<<std::endl
+	         <<"Normal:     "<<PrettyPrinter{formula}<<std::endl
+	         <<"Simplified: "<<PrettyPrinter{simplified}<<std::endl;
 	return 0;
 }

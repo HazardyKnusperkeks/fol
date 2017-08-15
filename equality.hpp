@@ -29,6 +29,8 @@ struct Equality {
 		return;
 	}
 	
+	constexpr auto simplified(void) const { return *this; }
+	
 	friend std::ostream& operator<<(std::ostream& os, const Equality& e) {
 		return os<<e.Term1<<" = "<<e.Term2;
 	}

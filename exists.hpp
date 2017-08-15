@@ -20,6 +20,11 @@ struct Exists {
 	Var v;
 	Form f;
 	
+	constexpr auto simplified(void) const {
+		auto form = f.simplified();
+		return Exists<Var, decltype(form)>{v, form};
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Exists& e) {
 		return os<<'E'<<e.v<<": "<<e.f;
 	}

@@ -81,6 +81,12 @@ struct IsQuantifier<Exists<Var, Form>> : std::true_type { };
 template<typename Var, typename Form>
 struct IsQuantifier<ForAll<Var, Form>> : std::true_type { };
 
+template<typename T>
+struct IsNot : std::false_type { };
+
+template<typename T>
+struct IsNot<Not<T>> : std::true_type { };
+
 } //namespace fol
 
 #endif

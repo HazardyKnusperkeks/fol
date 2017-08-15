@@ -54,6 +54,8 @@ struct Predicate {
 		return fromName(N.next(), A);
 	}
 	
+	constexpr auto simplified(void) const { return *this; }
+	
 	template<typename Name2>
 	static constexpr Predicate<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t)
 			noexcept(std::is_nothrow_constructible_v<Predicate<Name2, Args...>, const Name2&, const Args&...>) {

@@ -6,8 +6,11 @@
 #ifndef FOL_ASSERTS_HPP
 #define FOL_ASSERTS_HPP
 
+#include "equivalent.hpp"
 #include "function.hpp"
+#include "implies.hpp"
 #include "predicate.hpp"
+#include "not.hpp"
 #include "variable.hpp"
 
 #include <type_traits>
@@ -90,6 +93,27 @@ static_assert(Predicate<Name<'q'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
               Predicate<Name<'p'>, Variable<'x'>, Variable<'x'>>{});
 static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().prev()));
 static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().next()));
+
+//Simplified tests
+static_assert(Not<Predicate<Name<'p'>>>{}.simplified() == Not{Predicate{Name<'p'>{}}});
+static_assert(Not<Not<Predicate<Name<'p'>>>>{}.simplified() == Predicate{Name<'p'>{}});
+static_assert(Not<Not<Not<Predicate<Name<'p'>>>>>{}.simplified() == Not{Predicate{Name<'p'>{}}});
+static_assert(Not<Not<Not<Not<Predicate<Name<'p'>>>>>>{}.simplified() == Predicate{Name<'p'>{}});
+
+static_assert(Implies{Predicate{Name<'p'>{}}, Predicate{Name<'q'>{}}}.simplified() ==
+              Or{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}});
+static_assert(Implies{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}.simplified() ==
+              Or{Predicate{Name<'p'>{}}, Predicate{Name<'q'>{}}});
+
+static_assert(Equivalent{Predicate{Name<'p'>{}}, Predicate{Name<'q'>{}}}.simplified() ==
+              And{Or{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}},
+                  Or{Not{Predicate{Name<'q'>{}}}, Predicate{Name<'p'>{}}}});
+static_assert(Equivalent{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}.simplified() ==
+              And{Or{Predicate{Name<'p'>{}}, Predicate{Name<'q'>{}}},
+                  Or{Not{Predicate{Name<'q'>{}}}, Not{Predicate{Name<'p'>{}}}}});
+static_assert(Equivalent{Predicate{Name<'p'>{}}, Not{Predicate{Name<'q'>{}}}}.simplified() ==
+              And{Or{Not{Predicate{Name<'p'>{}}}, Not{Predicate{Name<'q'>{}}}},
+                  Or{Predicate{Name<'q'>{}}, Predicate{Name<'p'>{}}}});
 
 } //namespace fol
 

@@ -20,6 +20,11 @@ struct ForAll {
 	Var v;
 	Form f;
 	
+	constexpr auto simplified(void) const {
+		auto form = f.simplified();
+		return ForAll<Var, decltype(form)>{v, form};
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const ForAll& f) {
 		return os<<'A'<<f.v<<": "<<f.f;
 	}

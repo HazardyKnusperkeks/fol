@@ -17,6 +17,13 @@ namespace fol {
 
 template<typename... Ts>
 struct Or {
+	private:
+	template<typename... Tx, std::size_t... Idx>
+	static constexpr Or<Tx...> fromTupleImpl(std::tuple<Tx...> t, const std::index_sequence<Idx...>) {
+		return {std::get<Idx>(t)...};
+	}
+	
+	public:
 	static_assert((IsFormula<Ts>::value && ...), "All parameters have to be formulas!");
 	
 	std::tuple<Ts...> ts;
@@ -27,8 +34,17 @@ struct Or {
 		return;
 	}
 	
+	constexpr auto simplified(void) const {
+		return fromTuple(details::simplifiedTuple(ts));
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Or& a) {
 		return details::print(os, a.ts, " | ");
+	}
+	
+	template<typename... Tx>
+	static constexpr Or<Tx...> fromTuple(std::tuple<Tx...> t) {
+		return fromTupleImpl(std::move(t), std::index_sequence_for<Tx...>());
 	}
 };
 

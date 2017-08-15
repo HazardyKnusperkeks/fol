@@ -6,6 +6,8 @@
 #ifndef FOL_EQUIVALENT_HPP
 #define FOL_EQUIVALENT_HPP
 
+#include "and.hpp"
+#include "implies.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -18,6 +20,12 @@ struct Equivalent {
 	static_assert(IsFormula<T1>::value && IsFormula<T2>::value, "Both parameters have to be formulas!");
 	T1 t1;
 	T2 t2;
+	
+	constexpr auto simplified(void) const {
+		auto leftImplies = Implies{t1, t2}.simplified();
+		auto rightImplies = Implies{t2, t1}.simplified();
+		return And{leftImplies, rightImplies};
+	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const Equivalent& e) {
 		return os<<e.t1<<" -> "<<e.t2;

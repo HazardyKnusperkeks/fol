@@ -18,6 +18,16 @@ struct Not {
 	static_assert(IsFormula<T>::value, "The negation must contain a formula!");
 	T t;
 	
+	constexpr auto simplified(void) const {
+		if constexpr ( IsNot<T>::value ) {
+			return t.t.simplified();
+		} //if constexpr ( IsNot<T>::value )
+		else {
+			auto inner = t.simplified();
+			return Not<decltype(inner)>{inner};
+		} //else -> if constexpr ( IsNot<T>::value )
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Not& n) {
 		return os<<'-'<<n.t;
 	}
