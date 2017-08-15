@@ -6,6 +6,7 @@
 #ifndef FOL_NOT_HPP
 #define FOL_NOT_HPP
 
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -34,6 +35,21 @@ template<typename T1, typename T2>
 constexpr bool operator!=(const Not<T1>& n1, const Not<T2>& n2) noexcept {
 	return !(n1 == n2);
 }
+
+template<typename T>
+struct PrettyPrinter<Not<T>> {
+	const Not<T>& N;
+	const int Index;
+	
+	PrettyPrinter(const Not<T>& n, int index = -1) : N(n), Index(index) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		os<<'-'<<PrettyPrinter<T>{N.t, std::max(0, Index)};
+		return os;
+	}
+};
 
 }
 

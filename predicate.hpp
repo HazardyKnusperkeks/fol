@@ -7,6 +7,7 @@
 #define FOL_PREDICATE_HPP
 
 #include "name.hpp"
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -77,6 +78,19 @@ template<typename Name1T, typename Name2T, typename... Args1, typename... Args2>
 constexpr bool operator!=(const Predicate<Name1T, Args1...>& p1, const Predicate<Name2T, Args2...>& p2) noexcept {
 	return !(p1 == p2);
 }
+
+template<typename NameT, typename... Args>
+struct PrettyPrinter<Predicate<NameT, Args...>> {
+	const Predicate<NameT, Args...>& P;
+	
+	PrettyPrinter(const Predicate<NameT, Args...>& p, const int = -1) : P(p) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		return os<<P;
+	}
+};
 
 } //namespace fol
 

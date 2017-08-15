@@ -50,6 +50,7 @@ HEADERS		 = and.hpp\
 			   not.hpp\
 			   or.hpp\
 			   predicate.hpp\
+			   pretty_printer.hpp\
 			   traits.hpp\
 			   variable.hpp
 

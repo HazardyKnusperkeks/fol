@@ -7,6 +7,7 @@
 #define FOL_OR_HPP
 
 #include "helper.hpp"
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -40,6 +41,29 @@ template<typename... T1s, typename... T2s>
 constexpr bool operator!=(const Or<T1s...>& a1, const Or<T2s...>& a2) noexcept {
 	return !(a1 == a2);
 }
+
+template<typename... Ts>
+struct PrettyPrinter<Or<Ts...>> {
+	const Or<Ts...>& O;
+	const int Index;
+	
+	PrettyPrinter(const Or<Ts...>& o, int index = -1) : O(o), Index(index) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		const bool withParanthesis = Index != -1;
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].first;
+		} //if ( withParanthesis )
+		const auto nextIndex = (Index + 1) % static_cast<int>(PrettyParanthesis.size());
+		details::prettyPrint(os, O.ts, nextIndex, " | ");
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].second;
+		} //if ( withParanthesis )
+		return os;
+	}
+};
 
 } //namespace fol
 

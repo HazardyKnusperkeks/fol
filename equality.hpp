@@ -6,6 +6,7 @@
 #ifndef FOL_EQUALITY_HPP
 #define FOL_EQUALITY_HPP
 
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -35,6 +36,28 @@ struct Equality {
 
 template<typename T1, typename T2>
 Equality(T1, T2) -> Equality<T1, T2>;
+
+template<typename T1, typename T2>
+struct PrettyPrinter<Equality<T1, T2>> {
+	const Equality<T1, T2>& E;
+	const int Index;
+	
+	PrettyPrinter(const Equality<T1, T2>& e, int index = -1) : E(e), Index(index) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		const bool withParanthesis = Index != -1;
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].first;
+		} //if ( withParanthesis )
+		os<<E;
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].second;
+		} //if ( withParanthesis )
+		return os;
+	}
+};
 
 }
 

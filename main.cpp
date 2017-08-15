@@ -5,6 +5,7 @@
 #include "not.hpp"
 #include "or.hpp"
 #include "predicate.hpp"
+#include "pretty_printer.hpp"
 #include "variable.hpp"
 
 #include <cassert>
@@ -149,5 +150,14 @@ int main(void) {
 	And<Not<decltype(mP1)>, decltype(mP2)> mA{{{mP1}}, {mP2}};
 	std::cout<<mA<<' '<<sizeof(mA)<<std::endl;
 	assert(a == mA);
+	
+	constexpr auto andOr = And{lovesPred(x), Or{lovesPred(y), lovesPred(z)}};
+	constexpr auto orAnd = Or{And{lovesPred(x), lovesPred(y)}, lovesPred(z)};
+	
+	std::cout<<std::endl
+	         <<"   ====   Formula   ===="<<std::endl
+	         <<std::endl
+	         <<"AndOr: "<<andOr<<" -- "<<PrettyPrinter{andOr}<<std::endl
+	         <<"OrAnd: "<<orAnd<<" -- "<<PrettyPrinter{orAnd}<<std::endl;
 	return 0;
 }

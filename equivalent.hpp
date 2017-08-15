@@ -6,6 +6,7 @@
 #ifndef FOL_EQUIVALENT_HPP
 #define FOL_EQUIVALENT_HPP
 
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -35,6 +36,29 @@ template<typename T11, typename T12, typename T21, typename T22>
 constexpr bool operator!=(const Equivalent<T11, T12>& e1, const Equivalent<T21, T22>& e2) noexcept {
 	return !(e1 == e2);
 }
+
+template<typename T1, typename T2>
+struct PrettyPrinter<Equivalent<T1, T2>> {
+	const Equivalent<T1, T2>& E;
+	const int Index;
+	
+	PrettyPrinter(const Equivalent<T1, T2>& e, int index = -1) : E(e), Index(index) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		const bool withParanthesis = Index != -1;
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].first;
+		} //if ( withParanthesis )
+		const auto nextIndex = (Index + 1) % static_cast<int>(PrettyParanthesis.size());
+		os<<PrettyPrinter<T1>{E.t1, nextIndex}<<" <-> "<<PrettyPrinter<T2>{E.t2, nextIndex};
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].second;
+		} //if ( withParanthesis )
+		return os;
+	}
+};
 
 } //namespace fol
 

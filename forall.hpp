@@ -6,6 +6,7 @@
 #ifndef FOL_FORALL_HPP
 #define FOL_FORALL_HPP
 
+#include "pretty_printer.hpp"
 #include "traits.hpp"
 
 #include <ostream>
@@ -36,6 +37,29 @@ template<typename Var1, typename Form1, typename Var2, typename Form2>
 constexpr bool operator!=(const ForAll<Var1, Form1>& f1, const ForAll<Var2, Form2>& f2) noexcept {
 	return !(f1 == f2);
 }
+
+template<typename Var, typename Form>
+struct PrettyPrinter<ForAll<Var, Form>> {
+	const ForAll<Var, Form>& FA;
+	const int Index;
+	
+	PrettyPrinter(const ForAll<Var, Form>& fa, const int index = 0) : FA(fa), Index(index) {
+		return;
+	}
+	
+	std::ostream& prettyPrint(std::ostream& os) const {
+		const bool withParanthesis = !IsQuantifier<Form>::value;
+		os<<'A'<<FA.v;
+		if ( withParanthesis ) {
+			os<<": "<<PrettyParanthesis[static_cast<std::size_t>(Index)].first;
+		} //if ( withParanthesis )
+		os<<PrettyPrinter<Form>{FA.f, withParanthesis ? (Index + 1) % static_cast<int>(PrettyParanthesis.size()) : Index};
+		if ( withParanthesis ) {
+			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].second;
+		} //if ( withParanthesis )
+		return os;
+	}
+};
 
 } //namespace fol
 
