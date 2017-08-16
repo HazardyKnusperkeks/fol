@@ -19,7 +19,7 @@ template<typename... Ts>
 struct And {
 	private:
 	template<typename... Tx, std::size_t... Idx>
-	static constexpr Or<Tx...> fromTupleImpl(std::tuple<Tx...> t, const std::index_sequence<Idx...>) {
+	static constexpr And<Tx...> fromTupleImpl(std::tuple<Tx...> t, const std::index_sequence<Idx...>) {
 		return {std::get<Idx>(t)...};
 	}
 	

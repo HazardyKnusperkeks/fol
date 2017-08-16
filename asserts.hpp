@@ -6,11 +6,16 @@
 #ifndef FOL_ASSERTS_HPP
 #define FOL_ASSERTS_HPP
 
+#include "and.hpp"
 #include "equivalent.hpp"
+#include "equality.hpp"
+#include "exists.hpp"
+#include "forall.hpp"
 #include "function.hpp"
 #include "implies.hpp"
-#include "predicate.hpp"
 #include "not.hpp"
+#include "or.hpp"
+#include "predicate.hpp"
 #include "variable.hpp"
 
 #include <type_traits>
@@ -114,6 +119,25 @@ static_assert(Equivalent{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}.si
 static_assert(Equivalent{Predicate{Name<'p'>{}}, Not{Predicate{Name<'q'>{}}}}.simplified() ==
               And{Or{Not{Predicate{Name<'p'>{}}}, Not{Predicate{Name<'q'>{}}}},
                   Or{Predicate{Name<'q'>{}}, Predicate{Name<'p'>{}}}});
+
+static_assert(Not{And{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}}.simplified() ==
+              Not{And{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}});
+
+static_assert(Not{Or{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}}.simplified() ==
+              Not{Or{Not{Predicate{Name<'p'>{}}}, Predicate{Name<'q'>{}}}});
+
+static_assert(Not{ForAll{Variable<'x'>{}, Not{Predicate{Name<'p'>{}, Variable<'x'>{}}}}}.simplified() ==
+              Not{ForAll{Variable<'x'>{}, Not{Predicate{Name<'p'>{}, Variable<'x'>{}}}}});
+
+static_assert(Not{Exists{Variable<'x'>{}, Not{Predicate{Name<'p'>{}, Variable<'x'>{}}}}}.simplified() ==
+              Not{Exists{Variable<'x'>{}, Not{Predicate{Name<'p'>{}, Variable<'x'>{}}}}});
+
+static_assert(Not{Or{Not{Predicate{Name<'p'>{}, Variable<'x'>{}}},
+                     Not{Predicate{Name<'p'>{}, Variable<'y'>{}}},
+                     Not{Equality{Variable<'x'>{}, Variable<'y'>{}}}}}.simplified() ==
+              Not{Or{Not{Predicate{Name<'p'>{}, Variable<'x'>{}}},
+                     Not{Predicate{Name<'p'>{}, Variable<'y'>{}}},
+                     Not{Equality{Variable<'x'>{}, Variable<'y'>{}}}}});
 
 } //namespace fol
 
