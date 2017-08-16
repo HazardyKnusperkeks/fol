@@ -39,6 +39,16 @@ struct Equality {
 template<typename T1, typename T2>
 Equality(T1, T2) -> Equality<T1, T2>;
 
+template<typename T11, typename T12, typename T21, typename T22>
+constexpr bool operator==(const Equality<T11, T12>& e1, const Equality<T21, T22>& e2) noexcept {
+	return e1.Term1 == e2.Term1 && e1.Term2 == e2.Term2;
+}
+
+template<typename T11, typename T12, typename T21, typename T22>
+constexpr bool operator!=(const Equality<T11, T12>& e1, const Equality<T21, T22>& e2) noexcept {
+	return !(e1 == e2);
+}
+
 template<typename T1, typename T2>
 struct PrettyPrinter<Equality<T1, T2>> {
 	const Equality<T1, T2>& E;
