@@ -28,6 +28,14 @@ struct Not {
 		} //else -> if constexpr ( IsNot<T>::value )
 	}
 	
+	constexpr auto negate(void) const {
+		return t.toNegationNormalForm();
+	}
+	
+	constexpr auto toNegationNormalForm(void) const {
+		return t.negate();
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Not& n) {
 		return os<<'-'<<n.t;
 	}

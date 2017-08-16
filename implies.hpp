@@ -25,6 +25,14 @@ struct Implies {
 		return Or<Not<decltype(t1)>, decltype(t2)>{{t1}, t2}.simplified();
 	}
 	
+	constexpr auto negate(void) const {
+		return simplified().negate();
+	}
+	
+	constexpr auto toNegationNormalForm(void) const {
+		return simplified().toNegationNormalForm();
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Implies& i) {
 		return os<<i.t1<<" -> "<<i.t2;
 	}

@@ -6,6 +6,7 @@
 #ifndef FOL_HELPER_HPP
 #define FOL_HELPER_HPP
 
+#include "not.hpp"
 #include "pretty_printer.hpp"
 
 #include <ostream>
@@ -60,6 +61,41 @@ constexpr auto simplifiedTupleImpl(const Tuple &t, const std::index_sequence<I1,
 template<typename... Ts>
 constexpr auto simplifiedTuple(const std::tuple<Ts...>& t) {
 	return simplifiedTupleImpl(t, std::index_sequence_for<Ts...>());
+}
+
+template<typename Tuple, std::size_t I>
+constexpr auto negateTupleImpl(const Tuple& t, const std::index_sequence<I>) {
+	auto element = std::get<I>(t);
+	Not<std::decay_t<decltype(element)>> n{std::move(element)};
+	return std::tuple{n.toNegationNormalForm()};
+}
+
+template<typename Tuple, std::size_t I1, std::size_t I2, std::size_t... Is>
+constexpr auto negateTupleImpl(const Tuple& t, const std::index_sequence<I1, I2, Is...>) {
+	auto element = std::get<I1>(t);
+	Not<std::decay_t<decltype(element)>> n{std::move(element)};
+	return std::tuple_cat(std::tuple{n.toNegationNormalForm()}, negateTupleImpl(t, std::index_sequence<I2, Is...>{}));
+}
+
+template<typename... Ts>
+constexpr auto negateTuple(const std::tuple<Ts...>& t) {
+	return negateTupleImpl(t, std::index_sequence_for<Ts...>());
+}
+
+template<typename Tuple, std::size_t I>
+constexpr auto toNegationNormalFormTupleImpl(const Tuple& t, const std::index_sequence<I>) {
+	return std::tuple{std::get<I>(t).toNegationNormalForm()};
+}
+
+template<typename Tuple, std::size_t I1, std::size_t I2, std::size_t... Is>
+constexpr auto toNegationNormalFormTupleImpl(const Tuple& t, const std::index_sequence<I1, I2, Is...>) {
+	return std::tuple_cat(std::tuple{std::get<I1>(t).toNegationNormalForm()},
+	                      toNegationNormalFormTupleImpl(t, std::index_sequence<I2, Is...>{}));
+}
+
+template<typename... Ts>
+constexpr auto toNegationNormalFormTuple(const std::tuple<Ts...>& t) {
+	return toNegationNormalFormTupleImpl(t, std::index_sequence_for<Ts...>());
 }
 
 }

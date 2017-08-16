@@ -6,6 +6,7 @@
 #ifndef FOL_EQUALITY_HPP
 #define FOL_EQUALITY_HPP
 
+#include "not.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -30,6 +31,10 @@ struct Equality {
 	}
 	
 	constexpr auto simplified(void) const { return *this; }
+	
+	constexpr auto negate(void) const { return Not{*this}; }
+	
+	constexpr auto toNegationNormalForm(void) const { return *this; }
 	
 	friend std::ostream& operator<<(std::ostream& os, const Equality& e) {
 		return os<<e.Term1<<" = "<<e.Term2;

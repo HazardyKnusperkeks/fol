@@ -168,6 +168,7 @@ int main(void) {
 	
 	constexpr auto formula = ForAll{x, innerFormula};
 	constexpr auto simplified = formula.simplified();
+	constexpr auto nnf = formula.toNegationNormalForm();
 	
 	constexpr auto andOr = And{lovesPred(x), Or{lovesPred(y), lovesPred(z)}};
 	constexpr auto orAnd = Or{And{lovesPred(x), lovesPred(y)}, lovesPred(z)};
@@ -178,6 +179,7 @@ int main(void) {
 	         <<"AndOr: "<<andOr<<" -- "<<PrettyPrinter{andOr}<<std::endl
 	         <<"OrAnd: "<<orAnd<<" -- "<<PrettyPrinter{orAnd}<<std::endl
 	         <<"Normal:     "<<PrettyPrinter{formula}<<std::endl
-	         <<"Simplified: "<<PrettyPrinter{simplified}<<std::endl;
+	         <<"Simplified: "<<PrettyPrinter{simplified}<<std::endl
+	         <<"NNF:        "<<PrettyPrinter{nnf}<<std::endl;
 	return 0;
 }

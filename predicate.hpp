@@ -7,6 +7,7 @@
 #define FOL_PREDICATE_HPP
 
 #include "name.hpp"
+#include "not.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -55,6 +56,10 @@ struct Predicate {
 	}
 	
 	constexpr auto simplified(void) const { return *this; }
+	
+	constexpr auto negate(void) const { return Not{*this}; }
+	
+	constexpr auto toNegationNormalForm(void) const { return *this; }
 	
 	template<typename Name2>
 	static constexpr Predicate<Name2, Args...> fromName(const Name2& n, const std::tuple<Args...>& t)

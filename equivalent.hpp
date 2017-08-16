@@ -27,6 +27,14 @@ struct Equivalent {
 		return And{leftImplies, rightImplies};
 	}
 	
+	constexpr auto negate(void) const {
+		return simplified().negate();
+	}
+	
+	constexpr auto toNegationNormalForm(void) const {
+		return simplified().toNegationNormalForm();
+	}
+	
 	friend std::ostream& operator<<(std::ostream& os, const Equivalent& e) {
 		return os<<e.t1<<" -> "<<e.t2;
 	}

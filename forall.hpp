@@ -6,6 +6,9 @@
 #ifndef FOL_FORALL_HPP
 #define FOL_FORALL_HPP
 
+#include "forward.hpp"
+
+#include "exists.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -23,6 +26,15 @@ struct ForAll {
 	constexpr auto simplified(void) const {
 		auto form = f.simplified();
 		return ForAll<Var, decltype(form)>{v, form};
+	}
+	
+	constexpr auto negate(void) const {
+		return Exists{v, Not<Form>{f}.toNegationNormalForm()};
+	}
+	
+	constexpr auto toNegationNormalForm(void) const {
+		auto form = f.toNegationNormalForm();
+		return ForAll<Var, std::decay_t<decltype(form)>>{v, form};
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const ForAll& f) {

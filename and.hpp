@@ -6,7 +6,10 @@
 #ifndef FOL_AND_HPP
 #define FOL_AND_HPP
 
+#include "forward.hpp"
+
 #include "helper.hpp"
+#include "or.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -36,6 +39,14 @@ struct And {
 	
 	constexpr auto simplified(void) const {
 		return fromTuple(details::simplifiedTuple(ts));
+	}
+	
+	constexpr auto negate(void) const {
+		return Or<Ts...>::fromTuple(details::negateTuple(ts));
+	}
+	
+	constexpr auto toNegationNormalForm(void) const {
+		return fromTuple(details::toNegationNormalFormTuple(ts));
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const And& a) {
