@@ -22,7 +22,7 @@ struct Implies {
 	T2 t2;
 	
 	constexpr auto simplified(void) const {
-		return Or<Not<decltype(t1)>, decltype(t2)>{{t1}, t2}.simplified();
+		return Or<Not<T1>, T2>{{t1}, t2}.simplified();
 	}
 	
 	constexpr auto negate(void) const {

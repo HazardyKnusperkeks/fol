@@ -123,7 +123,7 @@ int main(void) {
 	Function<RtName> mF1{{"f1"}};
 	Function<Name<'f', '2'>, RtVariable> mF2{{}, {"y"}};
 	Function<RtName, RtVariable, Variable<'y'>> mF3{{"f3"}, {"x"}, {}};
-	Function<Name<'f', '4'>, Variable<'x'>, decltype(mF2)> mF4{{}, {}, {mF2}};
+	Function<Name<'f', '4'>, Variable<'x'>, std::decay_t<decltype(mF2)>> mF4{{}, {}, {mF2}};
 	
 	auto mF5 = mF4.next().append(mF4);
 	
@@ -140,7 +140,7 @@ int main(void) {
 	Predicate<RtName> mP1{{"p1"}};
 	Predicate<Name<'p', '2'>, RtVariable> mP2{{}, {"y"}};
 	Predicate<RtName, RtVariable, Variable<'y'>> mP3{{"p3"}, {"x"}, {}};
-	Predicate<Name<'p', '4'>, Variable<'x'>, decltype(mF2)> mP4{{}, {}, {mF2}};
+	Predicate<Name<'p', '4'>, Variable<'x'>, std::decay_t<decltype(mF2)>> mP4{{}, {}, {mF2}};
 	
 	std::cout<<mP1<<' '<<sizeof(mP1)<<std::endl
 	         <<mP2<<' '<<sizeof(mP2)<<std::endl
@@ -151,7 +151,7 @@ int main(void) {
 	Equality<Variable<'x'>, RtVariable> mE{{}, {'y'}};
 	std::cout<<mE<<' '<<sizeof(mE)<<std::endl;
 	
-	And<Not<decltype(mP1)>, decltype(mP2)> mA{{{mP1}}, {mP2}};
+	And<Not<std::decay_t<decltype(mP1)>>, std::decay_t<decltype(mP2)>> mA{{{mP1}}, {mP2}};
 	std::cout<<mA<<' '<<sizeof(mA)<<std::endl;
 	assert(a == mA);
 	

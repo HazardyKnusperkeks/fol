@@ -24,7 +24,7 @@ struct Not {
 		} //if constexpr ( IsNot<T>::value )
 		else {
 			auto inner = t.simplified();
-			return Not<decltype(inner)>{inner};
+			return Not<std::decay_t<decltype(inner)>>{inner};
 		} //else -> if constexpr ( IsNot<T>::value )
 	}
 	
