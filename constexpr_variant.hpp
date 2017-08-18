@@ -60,6 +60,20 @@ class ConstexprVariant {
 	details::VarUnion<Types...> U;
 	std::size_t Index = sizeof...(Types);
 	
+	template<typename... Ts>
+	static constexpr bool compare(const std::size_t index, const details::VarUnion<Ts...>& u1, const details::VarUnion<Ts...>& u2) noexcept {
+		if constexpr ( sizeof...(Ts) == 0 ) {
+			//Comparing two default constructed variants.
+			return true;
+		} //if constexpr ( sizeof...(Ts) == 0 )
+		else {
+			if ( index == 0 ) {
+				return u1.First == u2.First;
+			} //if ( index == 0 )
+			return compare(index - 1, u1.Rest, u2.Rest);
+		} //else -> if constexpr ( sizeof...(Ts) == 0 )
+	}
+	
 	public:
 	constexpr ConstexprVariant(void) : U() {
 		return;
@@ -83,6 +97,14 @@ class ConstexprVariant {
 	template<typename T>
 	constexpr T get(void) const {
 		return get<details::IndexOfV<T, Types...>>();
+	}
+	
+	friend constexpr bool operator==(const ConstexprVariant& lhs, const ConstexprVariant& rhs) noexcept {
+		return lhs.Index == rhs.Index && ConstexprVariant::compare(lhs.Index, lhs.U, rhs.U);
+	}
+	
+	friend constexpr bool operator!=(const ConstexprVariant& lhs, const ConstexprVariant& rhs) noexcept {
+		return !(lhs == rhs);
 	}
 };
 
