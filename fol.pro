@@ -38,6 +38,7 @@ SOURCES		 = main.cpp
 
 HEADERS		 = and.hpp\
 			   asserts.hpp\
+			   constexpr_variant.hpp\
 			   equality.hpp\
 			   equivalent.hpp\
 			   exists.hpp\
