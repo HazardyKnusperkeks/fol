@@ -37,6 +37,7 @@ gcc {
 SOURCES		 = main.cpp
 
 HEADERS		 = and.hpp\
+			   array_set.hpp\
 			   asserts.hpp\
 			   constexpr_algorithm.hpp\
 			   constexpr_variant.hpp\
