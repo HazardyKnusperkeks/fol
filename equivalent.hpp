@@ -21,6 +21,8 @@ struct Equivalent {
 	T1 t1;
 	T2 t2;
 	
+	using VariableCount = std::integral_constant<std::size_t, T1::VariableCount::value + T2::VariableCount::value>;
+	
 	constexpr auto simplified(void) const {
 		auto leftImplies = Implies{t1, t2}.simplified();
 		auto rightImplies = Implies{t2, t1}.simplified();

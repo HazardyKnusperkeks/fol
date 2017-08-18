@@ -18,6 +18,8 @@ struct Not {
 	static_assert(IsFormula<T>::value, "The negation must contain a formula!");
 	T t;
 	
+	using VariableCount = typename T::VariableCount;
+	
 	constexpr auto simplified(void) const {
 		if constexpr ( IsNot<T>::value ) {
 			return t.t.simplified();

@@ -30,6 +30,8 @@ struct Predicate {
 	static_assert(IsName<NameT>::value, "First template argument must be a name!");
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
+	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Args::VariableCount::value)>;
+	
 	NameT N;
 	std::tuple<Args...> A;
 	

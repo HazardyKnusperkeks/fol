@@ -17,6 +17,8 @@ template<char c, char... String>
 struct Variable {
 	Name<c,String...> N;
 	
+	using VariableCount = std::integral_constant<std::size_t, 1>;
+	
 	constexpr auto prev(void) const noexcept {
 		return fromName(N.prev());
 	}
@@ -48,6 +50,8 @@ std::ostream& operator<<(std::ostream& os, const Variable<String...> v) {
 
 struct RtVariable {
 	RtName Name;
+	
+	using VariableCount = std::integral_constant<std::size_t, 1>;
 	
 	RtVariable(const char c) : Name{c} { return; }
 	RtVariable(std::string name) : Name{std::move(name)} {

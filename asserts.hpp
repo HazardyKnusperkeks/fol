@@ -99,6 +99,19 @@ static_assert(Predicate<Name<'q'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
 static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().prev()));
 static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().next()));
 
+//Variable count tests
+static_assert(Variable<'x'>::VariableCount::value == 1);
+static_assert(Variable<'x', 'y'>::VariableCount::value == 1);
+static_assert(Function<Name<'f'>>::VariableCount::value == 0);
+static_assert(Function<Name<'f'>, Variable<'x'>>::VariableCount::value == 1);
+static_assert(Function<Name<'f'>, Variable<'x'>, Function<Name<'g'>, Variable<'x'>>>::VariableCount::value == 2);
+static_assert(Predicate<Name<'p'>>::VariableCount::value == 0);
+static_assert(Predicate<Name<'p'>, Variable<'x'>>::VariableCount::value == 1);
+static_assert(Predicate<Name<'p'>, Variable<'x'>, Function<Name<'g'>, Variable<'x'>>>::VariableCount::value == 2);
+static_assert(ForAll<Variable<'x'>, Predicate<Name<'p'>>>::VariableCount::value == 1);
+static_assert(ForAll<Variable<'x'>, Predicate<Name<'p'>, Variable<'x'>>>::VariableCount::value == 2);
+static_assert(ForAll<Variable<'x'>, Predicate<Name<'p'>, Variable<'y'>>>::VariableCount::value == 2);
+
 //Simplified tests
 static_assert(Not<Predicate<Name<'p'>>>{}.simplified() == Not{Predicate{Name<'p'>{}}});
 static_assert(Not<Not<Predicate<Name<'p'>>>>{}.simplified() == Predicate{Name<'p'>{}});

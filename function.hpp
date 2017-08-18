@@ -37,6 +37,8 @@ struct Function {
 	NameT N;
 	std::tuple<Args...> A;
 	
+	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Args::VariableCount::value)>;
+	
 	constexpr Function(void) = default;
 	
 	constexpr Function(NameT n, Args... a)

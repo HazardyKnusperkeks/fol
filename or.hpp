@@ -31,6 +31,8 @@ struct Or {
 	
 	std::tuple<Ts...> ts;
 	
+	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Ts::VariableCount::value)>;
+	
 	constexpr Or(void) = default;
 	constexpr Or(Ts... t) noexcept((std::is_nothrow_move_constructible_v<Ts> && ...) &&
 	                               noexcept(std::make_tuple(std::move(t)...))) : ts(std::make_tuple(std::move(t)...)) {

@@ -23,6 +23,8 @@ struct ForAll {
 	Var v;
 	Form f;
 	
+	using VariableCount = std::integral_constant<std::size_t, 1 + Form::VariableCount::value>;
+	
 	constexpr auto simplified(void) const {
 		auto form = f.simplified();
 		return ForAll<Var, std::decay_t<decltype(form)>>{v, form};

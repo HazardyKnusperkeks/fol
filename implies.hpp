@@ -21,6 +21,8 @@ struct Implies {
 	T1 t1;
 	T2 t2;
 	
+	using VariableCount = std::integral_constant<std::size_t, T1::VariableCount::value + T2::VariableCount::value>;
+	
 	constexpr auto simplified(void) const {
 		return Or<Not<T1>, T2>{{t1}, t2}.simplified();
 	}
