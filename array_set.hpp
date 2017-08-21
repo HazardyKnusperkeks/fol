@@ -37,7 +37,7 @@ class ArraySet {
 };
 
 namespace tests {
-using SetType = ArraySet<10, int, double, char>;
+using SetType = ArraySet<10, int, bool, char>;
 
 static_assert(SetType{} == SetType{});
 }
