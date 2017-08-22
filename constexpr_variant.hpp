@@ -51,16 +51,16 @@ struct Uninitialized<Type, false> {
 	}
 	
 	const Type& get() const &
-	{ return *Storage._M_ptr(); }
+	{ return *reinterpret_cast<const Type*>(Storage); }
 	
 	Type& get() &
-	{ return *Storage._M_ptr(); }
+	{ return *reinterpret_cast<Type*>(Storage); }
 	
 	const Type&& get() const &&
-	{ return std::move(*Storage._M_ptr()); }
+	{ return std::move(*reinterpret_cast<const Type*>(Storage)); }
 	
 	Type&& get() &&
-	{ return std::move(*Storage._M_ptr()); }
+	{ return std::move(*reinterpret_cast<Type*>(Storage)); }
 	
 	unsigned char Storage[sizeof(Type)];
 };
@@ -87,28 +87,103 @@ union VarUnion<Head, Tail...> {
 			Rest(std::in_place_index<I-1>, std::forward<Args>(args)...) {
 		return;
 	}
-	
-	template<std::size_t I>
-	constexpr auto get(void) const {
-		return 0;
-	}
 };
 
 template<std::size_t I, typename... Types>
-constexpr auto get(const std::in_place_index_t<I>, const VarUnion<Types...>& v) {
+constexpr decltype(auto) get(const std::in_place_index_t<I>, const VarUnion<Types...>& v) {
 	if constexpr ( I == 0 ) {
-		return v.First;
+		return v.First.get();
 	}
 	else {
 		return get(std::in_place_index<I-1>, v.Rest);
 	}
 }
+
+template<typename Variant, std::size_t Idx>
+constexpr void erasedDtor(Variant&& v) {
+	auto&& element = get(std::in_place_index<Idx>, std::forward<Variant>(v).U);
+	using Type = std::remove_reference_t<decltype(element)>;
+	element.~Type();
+	return;
 }
 
+template<bool triviallyDestructible, typename... Types>
+struct VariantStorage;
+
 template<typename... Types>
-class ConstexprVariant {
-	details::VarUnion<Types...> U;
+struct VariantStorage<false, Types...> {
+	VarUnion<Types...> U;
 	std::size_t Index = sizeof...(Types);
+	
+	template<std::size_t... Idx>
+	static constexpr void (*Vtable[])(const VariantStorage&) = { &erasedDtor<const VariantStorage&, Idx>... };
+	
+	constexpr VariantStorage(void) = default;
+	
+	template<std::size_t Idx, typename... Args>
+	constexpr VariantStorage(const std::in_place_index_t<Idx>, Args&&... args) : U{std::in_place_index<Idx>,
+	                                                                               std::forward<Args>(args)...},
+	                                                                             Index{Idx} {
+		return;
+	}
+	
+	constexpr VariantStorage(VariantStorage&& v) : U{std::move(v.U)}, Index{v.Index} {
+		v.Index = sizeof...(Types);
+		return;
+	}
+	
+	constexpr VariantStorage& operator=(VariantStorage&& v) {
+		using std::swap;
+		swap(U,     v.U);
+		swap(Index, v.Index);
+		return *this;
+	}
+	
+	template<std::size_t... Idx>
+	constexpr void resetImpl(const std::index_sequence<Idx...>) {
+		if ( Index != sizeof...(Types) ) {
+			Vtable<Idx...>[Index](*this);
+		} //if ( Index != sizeof...(Types) )
+		return;
+	}
+	
+	constexpr void reset(void) {
+		resetImpl(std::index_sequence_for<Types...>{});
+		Index = sizeof...(Types);
+		return;
+	}
+	
+	~VariantStorage(void) {
+		reset();
+		return;
+	}
+};
+
+template<typename... Types>
+struct VariantStorage<true, Types...> {
+	VarUnion<Types...> U;
+	std::size_t Index = sizeof...(Types);
+	
+	constexpr VariantStorage(void) = default;
+	
+	template<std::size_t Idx, typename... Args>
+	constexpr VariantStorage(const std::in_place_index_t<Idx>, Args&&... args) : U{std::in_place_index<Idx>,
+	                                                                               std::forward<Args>(args)...},
+	                                                                             Index{Idx} {
+		return;
+	}
+	
+	void reset(void) {
+		Index = sizeof...(Types);
+		return;
+	}
+};
+
+} //namespace details
+
+template<typename... Types>
+class ConstexprVariant : protected details::VariantStorage<(std::is_trivially_destructible_v<Types> && ...), Types...> {
+	using Base = typename details::VariantStorage<(std::is_trivially_destructible_v<Types> && ...), Types...>;
 	
 	template<typename... Ts>
 	static constexpr bool compare(const std::size_t index, const details::VarUnion<Ts...>& u1, const details::VarUnion<Ts...>& u2) noexcept {
@@ -125,27 +200,24 @@ class ConstexprVariant {
 	}
 	
 	public:
-	constexpr ConstexprVariant(void) noexcept : U{} {
-		return;
-	}
+	constexpr ConstexprVariant(void) = default;
 	
 	template<typename T>
-	constexpr ConstexprVariant(T&& t) : U{std::in_place_index<details::IndexOfV<T, Types...>>, std::forward<T>(t)},
-	                                    Index{details::IndexOfV<T, Types...>} {
+	constexpr ConstexprVariant(T&& t) : Base{std::in_place_index<details::IndexOfV<T, Types...>>, std::forward<T>(t)} {
 		return;
 	}
 	
 	constexpr std::size_t index(void) const noexcept {
-		return Index;
+		return Base::Index;
 	}
 	
 	template<std::size_t I>
-	constexpr auto get(void) const {
-		return details::get(std::in_place_index<I>, U);
+	constexpr decltype(auto) get(void) const {
+		return details::get(std::in_place_index<I>, Base::U);
 	}
 	
 	template<typename T>
-	constexpr T get(void) const {
+	constexpr decltype(auto) get(void) const {
 		return get<details::IndexOfV<T, Types...>>();
 	}
 	
