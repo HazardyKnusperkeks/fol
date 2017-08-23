@@ -13,6 +13,35 @@ namespace constexprAlgo {
 
 namespace details {
 
+template<typename InputIterator, typename Distance>
+constexpr void advance(InputIterator& i, Distance n, const std::input_iterator_tag) {
+	while ( n-- ) {
+		++i;
+	} //while ( n-- )
+	return;
+}
+
+template<typename BidirectionalIterator, typename Distance>
+constexpr void advance(BidirectionalIterator& i, Distance n, const std::bidirectional_iterator_tag) {
+	if ( n > 0 ) {
+		while ( n-- ) {
+			++i;
+		} //while ( n-- )
+	} //if ( n > 0 )
+	else {
+		while ( n++ ) {
+			--i;
+		} //while ( n++ )
+	} //else -> if ( n > 0 )
+	return;
+}
+
+template<typename RandomAccessIterator, typename Distance>
+constexpr void advance(RandomAccessIterator& i, const Distance n, std::random_access_iterator_tag) {
+	i += n;
+	return;
+}
+
 template<typename InputIterator>
 constexpr auto distance(InputIterator first, const InputIterator last, const std::input_iterator_tag) noexcept {
 	typename std::iterator_traits<InputIterator>::difference_type n = 0;
@@ -29,6 +58,13 @@ constexpr auto distance(RandomAccessIterator first, const RandomAccessIterator l
 }
 
 } //namesapce details
+
+template<typename InputIterator, typename Distance>
+constexpr void advance(InputIterator& i, const Distance n) {
+	typename std::iterator_traits<InputIterator>::difference_type d = n;
+	details::advance(i, d, typename std::iterator_traits<InputIterator>::iterator_category{});
+	return;
+}
 
 template<typename InputIterator>
 constexpr auto distance(InputIterator first, const InputIterator last) noexcept {
