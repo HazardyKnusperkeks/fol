@@ -105,6 +105,16 @@ constexpr bool equal(IterT1 first1, const IterT1 last1, IterT2 first2, const Ite
 	return first1 == last1 && first2 == last2;
 }
 
+template<typename InputIter, typename T>
+constexpr InputIter find(InputIter begin, const InputIter end, const T& t) {
+	for ( ; begin != end; ++begin ) {
+		if ( *begin == t ) {
+			break;
+		} //if ( *begin == t )
+	} //for ( ; begin != end; ++begin )
+	return begin;
+}
+
 } //namespace constexprAlgo
 
 #endif
