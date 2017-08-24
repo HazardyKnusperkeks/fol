@@ -138,6 +138,74 @@ constexpr auto distance(RandomAccessIterator first, const RandomAccessIterator l
 	return last - first;
 }
 
+template<typename InputIterator, typename Predicate>
+constexpr InputIterator find_if(InputIterator first, const InputIterator last, const Predicate pred,
+                                const std::input_iterator_tag) {
+	while ( first != last && !pred(first) ) {
+		++first;
+	} //while ( first != last && !pred(first) )
+	return first;
+}
+
+template<typename RandomAccessIterator, typename Predicate>
+constexpr RandomAccessIterator find_if(RandomAccessIterator first, const RandomAccessIterator last,
+                                       const Predicate pred, const std::random_access_iterator_tag) {
+	typename std::iterator_traits<RandomAccessIterator>::difference_type trip_count = (last - first) >> 2;
+	
+	for ( ; trip_count > 0; --trip_count ) {
+		if ( pred(first) ) {
+			return first;
+		} //if ( pred(first) )
+		++first;
+		
+		if ( pred(first) ) {
+			return first;
+		} //if ( pred(first) )
+		++first;
+		
+		if ( pred(first) ) {
+			return first;
+		} //if ( pred(first) )
+		++first;
+		
+		if ( pred(first) ) {
+			return first;
+		} //if ( pred(first) )
+		++first;
+	} //for ( ; trip_count > 0; --trip_count )
+	
+	switch ( last - first ) {
+		case 3 : {
+			if ( pred(first) ) {
+				return first;
+			} //if ( pred(first) )
+			++first;
+		} //case 3
+		[[fallthrough]]
+		case 2 : {
+			if ( pred(first) ) {
+				return first;
+			} //if ( pred(first) )
+			++first;
+		} //case 2
+		[[fallthrough]]
+		case 1 : {
+			if ( pred(first) ) {
+				return first;
+			} //if ( pred(first) )
+			++first;
+		} //case 1
+//		[[fallthrough]]
+	} //switch ( last - first )
+	return last;
+}
+
+template<typename Iterator, typename Predicate>
+constexpr Iterator find_if(Iterator first, Iterator last, Predicate pred) {
+	return find_if(std::move(first), std::move(last), std::move(pred),
+	               typename std::iterator_traits<Iterator>::iterator_category{});
+}
+
 } //namesapce details
 
 template<typename InputIterator, typename Distance>
