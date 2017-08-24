@@ -320,6 +320,12 @@ constexpr InputIter find(InputIter begin, const InputIter end, const T& t) {
 	return begin;
 }
 
+template<typename ForwardIterator1, typename ForwardIterator2>
+constexpr bool is_permutation(const ForwardIterator1 first1, const ForwardIterator1 last1,
+                              const ForwardIterator2 first2, const ForwardIterator2 last2) {
+	return details::is_permutation(first1, last1, first2, last2, details::ops::IterEqualToIter{});
+}
+
 } //namespace constexprAlgo
 
 #endif
