@@ -11,7 +11,77 @@
 
 namespace constexprAlgo {
 
+template<typename InputIterator>
+constexpr auto distance(const InputIterator first, const InputIterator last);
+
 namespace details {
+
+namespace ops {
+template<typename Compare>
+struct IterCompIter {
+	Compare Comp;
+	
+	explicit constexpr IterCompIter(Compare comp) : Comp{std::move(comp)} {
+		return;
+	}
+	
+	template<typename Iterator1, typename Iterator2>
+	constexpr bool operator()(const Iterator1 it1, const Iterator2 it2) {
+		return Comp(*it1, *it2);
+	}
+};
+
+template<typename Compare, typename Iterator>
+struct IterCompToIter {
+	Compare Comp;
+	Iterator Iter;
+	
+	constexpr IterCompToIter(Compare comp, Iterator iter) : Comp{std::move(comp)}, Iter{std::move(iter)} {
+		return;
+	}
+	
+	template<typename Iterator2>
+	constexpr bool operator()(Iterator2 iter2) const {
+		return Comp(*iter2, *Iter);
+	}
+};
+
+template<typename Iterator1>
+struct IterEqualsIter {
+	Iterator1 Iter1;
+	
+	constexpr explicit IterEqualsIter(Iterator1 iter) : Iter1{std::move(iter)} {
+		return;
+	}
+	
+	template<typename Iterator2>
+	constexpr bool operator()(const Iterator2 iter2) const {
+		return *iter2 == *Iter1;
+	}
+};
+
+struct IterEqualToIter {
+	template<typename Iterator1, typename Iterator2>
+	constexpr bool operator()(const Iterator1 it1, const Iterator2 it2) const {
+		return *it1 == *it2;
+	}
+};
+
+template<typename Compare, typename Iterator>
+constexpr auto iterCompIter(IterCompIter<Compare> comp, Iterator it) {
+	return IterCompToIter<Compare, Iterator>{std::move(comp.Comp), std::move(it)};
+}
+
+template<typename Compare>
+constexpr auto iterCompIter(Compare comp) {
+	return IterCompIter<Compare>{std::move(comp)};
+}
+
+template<typename Iterator>
+constexpr auto iterCompIter(const IterEqualToIter, Iterator it) {
+	return IterEqualsIter<Iterator>{std::move(it)};
+}
+} //namespace ops
 
 template<typename InputIterator, typename Distance>
 constexpr void advance(InputIterator& i, Distance n, const std::input_iterator_tag) {
