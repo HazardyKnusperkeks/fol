@@ -206,6 +206,62 @@ constexpr Iterator find_if(Iterator first, Iterator last, Predicate pred) {
 	               typename std::iterator_traits<Iterator>::iterator_category{});
 }
 
+template<typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
+constexpr bool is_permutation(ForwardIterator1 first1, const ForwardIterator1 last1,
+                              ForwardIterator2 first2, const ForwardIterator2 last2,
+                              const BinaryPredicate pred) {
+	using Cat1 = typename std::iterator_traits<ForwardIterator1>::iterator_category;
+	using Cat2 = typename std::iterator_traits<ForwardIterator2>::iterator_category;
+	using It1IsRA = std::is_same<Cat1, std::random_access_iterator_tag>;
+	using It2IsRA = std::is_same<Cat2, std::random_access_iterator_tag>;
+	constexpr bool raIters = It1IsRA::value && It2IsRA::value;
+	if ( raIters ) {
+		const auto d1 = constexprAlgo::distance(first1, last1);
+		const auto d2 = constexprAlgo::distance(first2, last2);
+		if ( d1 != d2 ) {
+			return false;
+		} //if ( d1 != d2 )
+	} //if ( raIters )
+	
+	// Efficiently compare identical prefixes:  O(N) if sequences
+	// have the same elements in the same order.
+	for ( ; first1 != last1 && first2 != last2; ++first1, ++first2 ) {
+		if ( !pred(first1, first2) ) {
+			break;
+		} //if ( !pred(first1, first2) )
+	} //for ( ; first1 != last1 && first2 != last2; ++first1, ++first2 )
+	
+	if ( raIters ) {
+		if ( first1 == last1 ) {
+			return true;
+		} //if ( first1 == last1 )
+	} //if ( raIters )
+	else {
+		const auto d1 = constexprAlgo::distance(first1, last1);
+		const auto d2 = constexprAlgo::distance(first2, last2);
+		
+		if ( d1 == 0 && d2 == 0 ) {
+			return true;
+		} //if ( d1 == 0 && d2 == 0 )
+		if ( d1 != d2 ) {
+			return false;
+		} //if ( d1 != d2 )
+	} //else -> if ( raIters )
+	
+	for ( ForwardIterator1 scan = first1; scan != last1; ++scan ) {
+		const auto op = ops::iterCompIter(pred, scan);
+		if ( scan != find_if(first1, scan, op) ) {
+			continue; // We've seen this one before.
+		} //if ( scan != find_if(first1, scan, op) )
+		
+		const auto matches = count_if(first2, last2, op);
+		if ( 0 == matches || count_if(scan, last1, std::move(op)) != matches ) {
+			return false;
+		} //if ( 0 == matches || count_if(scan, last1, std::move(op)) != matches )
+	} //for ( ForwardIterator1 scan = first1; scan != last1; ++scan )
+	return true;
+}
+
 } //namesapce details
 
 template<typename InputIterator, typename Distance>
