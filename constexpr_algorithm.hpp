@@ -112,6 +112,17 @@ constexpr void advance(RandomAccessIterator& i, const Distance n, std::random_ac
 	return;
 }
 
+template<typename InputIterator, typename Predicate>
+constexpr auto count_if(InputIterator first, const InputIterator last, const Predicate pred) {
+	typename std::iterator_traits<InputIterator>::difference_type n = 0;
+	for ( ; first != last; ++first ) {
+		if ( pred(first) ) {
+			++n;
+		} //if ( pred(first) )
+	} //for ( ; first != last; ++first )
+	return n;
+}
+
 template<typename InputIterator>
 constexpr auto distance(InputIterator first, const InputIterator last, const std::input_iterator_tag) noexcept {
 	typename std::iterator_traits<InputIterator>::difference_type n = 0;
