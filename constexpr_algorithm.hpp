@@ -272,7 +272,7 @@ constexpr void advance(InputIterator& i, const Distance n) {
 }
 
 template<typename InputIterator>
-constexpr auto distance(InputIterator first, const InputIterator last) noexcept {
+constexpr auto distance(const InputIterator first, const InputIterator last) {
 	return details::distance(first, last, typename std::iterator_traits<InputIterator>::iterator_category{});
 }
 
