@@ -36,7 +36,7 @@ class ArraySet {
 	
 	template<std::size_t N2>
 	constexpr bool operator==(const ArraySet<N2, Types...>& rhs) const noexcept {
-		return constexprAlgo::equal(Data.begin(), Data.begin() + Index, rhs.Data.begin(), rhs.Data.begin() + rhs.Index);
+		return constexprAlgo::is_permutation(Begin, End, rhs.Begin, rhs.End);
 	}
 	
 	template<std::size_t N2>
@@ -55,6 +55,10 @@ static_assert(SetType{5, true, 7, 'h'}.contains(5));
 static_assert(!SetType{5, true, 7, 'h'}.contains(false));
 static_assert(!SetType{5, true, 7, 'h'}.contains(6));
 static_assert(!SetType{5, true, 7, 'h'}.contains('c'));
+static_assert(SetType{5, true, 7, 'h'} == SetType{5, true, 7, 'h'});
+static_assert(SetType{5, true, 7, 'h'} == SetType{7, true, 5, 'h'});
+static_assert(SetType{5, true, 7, 'h'} == SetType{true, 7, 'h', 5});
+static_assert(SetType{5, true, 7, 'h'} == SetType{5, 'h', true, 7});
 
 }
 
