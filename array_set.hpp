@@ -65,6 +65,17 @@ class ArraySet {
 		return *this;
 	}
 	
+	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	constexpr ArraySet remove(const Type& t) {
+		auto iter = constexprAlgo::find(Begin, End, t);
+		if ( iter != End ) {
+			--Index;
+			--End;
+			*iter = std::move(*End);
+		} //if ( iter != End )
+		return *this;
+	}
+	
 	template<std::size_t N2>
 	constexpr bool operator==(const ArraySet<N2, Types...>& rhs) const noexcept {
 		return constexprAlgo::is_permutation(Begin, End, rhs.Begin, rhs.End);
@@ -96,6 +107,10 @@ static_assert(SetType{5, true, 7, 'h'}.insert(8)     == SetType{5, true, 7, 'h',
 static_assert(SetType{5, true, 7, 'h'}.insert(false) == SetType{5, true, 7, 'h', false});
 static_assert(SetType{5, true, 7, 'h'}.insert(true)  == SetType{5, true, 7, 'h'});
 static_assert(SetType{5, true, 7, 'h'}.insert('9')   == SetType{5, true, 7, 'h', '9'});
+static_assert(SetType{5, true, 7, 'h'}.remove('9')   == SetType{5, true, 7, 'h'});
+static_assert(SetType{5, true, 7, 'h'}.remove('h')   == SetType{5, true, 7});
+static_assert(SetType{5, true, 7, 'h'}.remove(7)     == SetType{5, true, 'h'});
+static_assert(SetType{5}.remove(5)                   == SetType{});
 
 }
 
