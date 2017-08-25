@@ -19,6 +19,23 @@ class ArraySet {
 	const decltype(Data.begin()) Begin = Data.begin();
 	decltype(Data.begin()) End = Data.begin();
 	
+	constexpr void makeUnique(void) {
+		auto iter = Begin;
+		constexprAlgo::advance(iter, 1);
+		while ( iter != End ) {
+			if ( constexprAlgo::find(Begin, iter, *iter) != iter ) {
+				//Found a duplicate!
+				--End;
+				--Index;
+				*iter = std::move(*End);
+			} //if ( constexprAlgo::find(Begin, iter, *iter) != iter )
+			else {
+				++iter;
+			} //else -> if ( constexprAlgo::find(Begin, iter, *iter) != iter )
+		} //while ( iter != End )
+		return;
+	}
+	
 	public:
 	constexpr ArraySet(void) = default;
 	
@@ -27,6 +44,7 @@ class ArraySet {
 	constexpr ArraySet(Args&&... args) : Data{std::forward<Args>(args)...}, Index{sizeof...(Args)} {
 		static_assert(sizeof...(Args) <= N, "More initializers than elements in the set allowed!");
 		constexprAlgo::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
+		makeUnique();
 		return;
 	}
 	
