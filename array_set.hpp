@@ -22,7 +22,8 @@ class ArraySet {
 	public:
 	constexpr ArraySet(void) = default;
 	
-	template<typename... Args>
+	template<typename... Args,
+	         std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Args>, ArraySet>> && ...)>* = nullptr>
 	constexpr ArraySet(Args&&... args) : Data{std::forward<Args>(args)...}, Index{sizeof...(Args)} {
 		static_assert(sizeof...(Args) <= N, "More initializers than elements in the set allowed!");
 		constexprAlgo::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
