@@ -19,7 +19,7 @@ inline constexpr size_t IndexOfV = IndexOf<T, Types...>::value;
 
 template<typename T, typename Head, typename... Tail>
 struct IndexOf<T, Head, Tail...> : std::integral_constant<size_t,
-	std::is_same_v<std::remove_cv_t<std::remove_reference_t<T>>, Head> ? 0 : IndexOfV<T, Tail...> + 1> { };
+	std::is_same_v<std::decay_t<T>, Head> ? 0 : IndexOfV<T, Tail...> + 1> { };
 
 template<typename Type, bool = std::is_literal_type_v<Type>>
 struct Uninitialized;
