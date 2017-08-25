@@ -53,6 +53,18 @@ class ArraySet {
 		return constexprAlgo::find(Begin, End, t) != End;
 	}
 	
+	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	constexpr ArraySet insert(Type&& t) {
+		if ( !contains(t) ) {
+			if ( ++Index == N ) {
+				throw std::out_of_range("ArraySet: Trying to insert more values than configured!");
+			} //if ( ++Index == N )
+			*End = std::forward<Type>(t);
+			++End;
+		} //if ( !contains(t) )
+		return *this;
+	}
+	
 	template<std::size_t N2>
 	constexpr bool operator==(const ArraySet<N2, Types...>& rhs) const noexcept {
 		return constexprAlgo::is_permutation(Begin, End, rhs.Begin, rhs.End);
@@ -78,6 +90,12 @@ static_assert(SetType{5, true, 7, 'h'} == SetType{5, true, 7, 'h'});
 static_assert(SetType{5, true, 7, 'h'} == SetType{7, true, 5, 'h'});
 static_assert(SetType{5, true, 7, 'h'} == SetType{true, 7, 'h', 5});
 static_assert(SetType{5, true, 7, 'h'} == SetType{5, 'h', true, 7});
+static_assert(SetType{5, true, 7, 'h'} == SetType{5, true, 7, 'h', 7});
+static_assert(SetType{5, true, 7, 'h'} != SetType{5, true, 7, 'h', 6});
+static_assert(SetType{5, true, 7, 'h'}.insert(8)     == SetType{5, true, 7, 'h', 8});
+static_assert(SetType{5, true, 7, 'h'}.insert(false) == SetType{5, true, 7, 'h', false});
+static_assert(SetType{5, true, 7, 'h'}.insert(true)  == SetType{5, true, 7, 'h'});
+static_assert(SetType{5, true, 7, 'h'}.insert('9')   == SetType{5, true, 7, 'h', '9'});
 
 }
 
