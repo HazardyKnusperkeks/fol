@@ -179,6 +179,64 @@ struct VariantStorage<true, Types...> {
 	}
 };
 
+struct EmptyUnion { };
+
+template<typename Type1, typename Type2, std::enable_if_t<std::negation_v<std::is_same<Type1, Type2>>>* = nullptr>
+constexpr bool compare(const Type1&, const Type2&) noexcept {
+	return false;
+}
+
+template<typename Type>
+constexpr bool compare(const Type& t1, const Type& t2) noexcept {
+	return t1 == t2;
+}
+
+template<typename... Types2>
+constexpr bool compare(const EmptyUnion, std::size_t index2, const VarUnion<Types2...>& u2) noexcept {
+	if constexpr ( sizeof...(Types2) == 0 ) {
+		//Two default constructed variants.
+		return true;
+	} //if constexpr ( sizeof...(Types2) == 0 )
+	else {
+		if ( index2 == 0 ) {
+			//One default constructed variant, and one that is not.
+			return false;
+		} //if ( index2 == 0 )
+		
+		return compare(EmptyUnion{}, index2 - 1, u2.Rest);
+	} //else -> if constexpr ( sizeof...(Types2) == 0 )
+}
+
+template<typename Type1, typename... Types2>
+constexpr bool compare(const Type1& t, const std::size_t index2, const VarUnion<Types2...>& u2) noexcept {
+	if constexpr ( sizeof...(Types2) == 0 ) {
+		//One default constructed variant, and one that is not.
+		return false;
+	} //if constexpr ( sizeof...(Types2) == 0 )
+	else {
+		if ( index2 == 0 ) {
+			return compare(t, u2.First.Storage);
+		} //if ( index2 == 0 )
+		
+		return compare(t, index2 - 1, u2.Rest);
+	} //else -> if constexpr ( sizeof...(Types2) == 0 )
+}
+
+template<typename... Types1, typename... Types2>
+constexpr bool compare(const std::size_t index1, const VarUnion<Types1...>& u1,
+                       const std::size_t index2, const VarUnion<Types2...>& u2) noexcept {
+	if constexpr ( sizeof...(Types1) == 0 ) {
+		return compare(EmptyUnion{}, index2, u2);
+	} //if constexpr ( sizeof...(Types1) == 0 )
+	else {
+		if ( index1 == 0 ) {
+			return compare(u1.First.Storage, index2, u2);
+		} //if ( index1 == 0 )
+		
+		return compare(index1 - 1, u1.Rest, index2, u2);
+	} //else -> if constexpr ( sizeof...(Types1) == 0 )
+}
+
 } //namespace details
 
 template<typename... Types>
@@ -228,6 +286,39 @@ class ConstexprVariant : protected details::VariantStorage<(std::is_trivially_de
 	friend constexpr bool operator!=(const ConstexprVariant& lhs, const ConstexprVariant& rhs) noexcept {
 		return !(lhs == rhs);
 	}
+	
+	template<typename... Types1, typename... Types2>
+	friend constexpr bool operator==(const ConstexprVariant<Types1...>& lhs, const ConstexprVariant<Types2...>& rhs) noexcept;
+	
+	template<typename... Types1, typename... Types2>
+	friend constexpr bool details::compare(const std::size_t, const ConstexprVariant<Types1...>&,
+	                                       const std::size_t, const ConstexprVariant<Types2...>&) noexcept;
+	
+	template<typename... Types2>
+	friend constexpr bool operator!=(const ConstexprVariant<Types...>& lhs, const ConstexprVariant<Types2...>& rhs) noexcept {
+		return !(lhs == rhs);
+	}
 };
+
+template<typename... Types1, typename... Types2>
+constexpr bool operator==(const ConstexprVariant<Types1...>& lhs, const ConstexprVariant<Types2...>& rhs) noexcept {
+	return details::compare(lhs.Index, lhs.U, rhs.Index, rhs.U);
+}
+
+namespace tests {
+static_assert(ConstexprVariant<int, char>{7}   == ConstexprVariant<int, char>{7});
+static_assert(ConstexprVariant<int, char>{'7'} == ConstexprVariant<int, char>{'7'});
+static_assert(ConstexprVariant<int, char>{7}   != ConstexprVariant<int, char>{'7'});
+static_assert(ConstexprVariant<int, char>{7}   == ConstexprVariant<char, int>{7});
+static_assert(ConstexprVariant<int, char>{'7'} == ConstexprVariant<char, int>{'7'});
+static_assert(ConstexprVariant<int, char>{'7'} != ConstexprVariant<char, int>{7});
+static_assert(ConstexprVariant<int, char>{'7'} != ConstexprVariant<char, int>{});
+static_assert(ConstexprVariant<int, char>{}    == ConstexprVariant<char, int>{});
+static_assert(ConstexprVariant<char, int>{'7'} == ConstexprVariant<int, char>{'7'});
+static_assert(ConstexprVariant<char, int>{'7'} != ConstexprVariant<int, char>{7});
+static_assert(ConstexprVariant<char, int>{'7'} != ConstexprVariant<int, char>{});
+static_assert(ConstexprVariant<char, int>{}    == ConstexprVariant<int, char>{});
+} //namespace tests
+
 
 #endif
