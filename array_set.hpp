@@ -11,6 +11,7 @@
 
 #include <array>
 #include <type_traits>
+#include <utility>
 
 template<std::size_t N, typename... Types>
 class ArraySet {
@@ -37,6 +38,249 @@ class ArraySet {
 	}
 	
 	public:
+	class iterator {
+		private:
+		using Base = typename std::array<ConstexprVariant<Types...>, N>::iterator;
+		Base Iter;
+		
+		public:
+		using difference_type   = typename std::iterator_traits<Base>::difference_type;
+		using value_type        = typename std::iterator_traits<Base>::value_type;
+		using pointer           = typename std::iterator_traits<Base>::pointer;
+		using reference         = typename std::iterator_traits<Base>::reference;
+		using iterator_category = typename std::iterator_traits<Base>::iterator_category;
+		
+		constexpr iterator(void) noexcept(std::is_nothrow_default_constructible_v<Base>) = default;
+		
+		constexpr iterator(Base iter) noexcept(std::is_nothrow_move_constructible_v<Base>) :
+				Iter{std::move(iter)} {
+			return;
+		}
+		
+		constexpr reference operator*(void) const noexcept(noexcept(*Iter)) {
+			return *Iter;
+		}
+		
+		constexpr pointer operator->(void) const noexcept(noexcept(std::declval<iterator>().operator*())) {
+			return std::addressof(operator*());
+		}
+		
+		constexpr reference operator[](const difference_type n) const
+				noexcept(noexcept(std::declval<iterator>() + n) && noexcept(std::declval<iterator>().operator*())) {
+			return *(*this + n);
+		}
+		
+		constexpr iterator& operator++(void) noexcept(noexcept(++Iter)) {
+			++Iter;
+			return *this;
+		}
+		
+		constexpr iterator operator++(const int) noexcept(std::is_nothrow_copy_constructible_v<iterator> &&
+		                                                  noexcept(++std::declval<iterator>())) {
+			iterator copy{*this};
+			++*this;
+			return copy;
+		}
+		
+		constexpr iterator& operator--(void) noexcept(noexcept(--Iter)) {
+			--Iter;
+			return *this;
+		}
+		
+		constexpr iterator operator--(const int) noexcept(std::is_nothrow_copy_constructible_v<iterator> &&
+		                                                  noexcept(--std::declval<iterator>())) {
+			iterator copy{*this};
+			--*this;
+			return copy;
+		}
+		
+		constexpr iterator& operator+=(const difference_type n) noexcept(noexcept(Iter += n)) {
+			Iter += n;
+			return *this;
+		}
+		
+		constexpr iterator& operator-=(const difference_type n) noexcept(noexcept(Iter -= n)) {
+			Iter -= n;
+			return *this;
+		}
+		
+		constexpr iterator operator+(const difference_type n) const
+				noexcept(noexcept(Iter + n) && std::is_nothrow_constructible_v<iterator, decltype(Iter + n)>) {
+			return Iter + n;
+		}
+		
+		constexpr iterator operator-(const difference_type n) const
+				noexcept(noexcept(Iter - n) && std::is_nothrow_constructible_v<iterator, decltype(Iter - n)>) {
+			return Iter - n;
+		}
+		
+		friend constexpr iterator operator+(const difference_type n, iterator iter) noexcept(noexcept(iter += n)) {
+			return iter += n;
+		}
+		
+		constexpr difference_type operator-(const iterator& iter) const noexcept(noexcept(Iter - iter.Iter)) {
+			return Iter - iter.Iter;
+		}
+		
+		friend constexpr bool operator==(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1.Iter == iter2.Iter)) {
+			return iter1.Iter == iter2.Iter;
+		}
+		
+		friend constexpr bool operator!=(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1 == iter2)) {
+			return !(iter1 == iter2);
+		}
+		
+		friend constexpr bool operator<(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1.Iter < iter2.Iter)) {
+			return iter1.Iter < iter2.Iter;
+		}
+		
+		friend constexpr bool operator<=(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1 > iter2)) {
+			return !(iter1.Iter > iter2.Iter);
+		}
+		
+		friend constexpr bool operator>(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1.Iter > iter2.Iter)) {
+			return iter1.Iter > iter2.Iter;
+		}
+		
+		friend constexpr bool operator>=(const iterator& iter1, const iterator& iter2)
+				noexcept(noexcept(iter1 < iter2)) {
+			return !(iter1.Iter < iter2.Iter);
+		}
+		
+		friend class const_iterator;
+	};
+	
+	class const_iterator {
+		private:
+		using Base = typename std::array<ConstexprVariant<Types...>, N>::const_iterator;
+		Base Iter;
+		
+		public:
+		using difference_type   = typename std::iterator_traits<Base>::difference_type;
+		using value_type        = typename std::iterator_traits<Base>::value_type;
+		using pointer           = typename std::iterator_traits<Base>::pointer;
+		using reference         = typename std::iterator_traits<Base>::reference;
+		using iterator_category = typename std::iterator_traits<Base>::iterator_category;
+		
+		constexpr const_iterator(void) noexcept(std::is_nothrow_default_constructible_v<Base>) = default;
+		
+		constexpr const_iterator(Base iter) noexcept(std::is_nothrow_move_constructible_v<Base>) :
+				Iter{std::move(iter)} {
+			return;
+		}
+		
+		constexpr const_iterator(const iterator iter)
+				noexcept(std::is_nothrow_copy_constructible_v<Base, iterator::Base>) : Iter{iter.Iter} {
+			return;
+		}
+		
+		constexpr const_iterator(iterator&& iter)
+				noexcept(std::is_nothrow_move_constructible_v<Base, iterator::Base>) : Iter{std::move(iter.Iter)} {
+			return;
+		}
+		
+		constexpr reference operator*(void) const noexcept(noexcept(*Iter)) {
+			return *Iter;
+		}
+		
+		constexpr pointer operator->(void) const noexcept(noexcept(std::declval<const_iterator>().operator*())) {
+			return std::addressof(operator*());
+		}
+		
+		constexpr reference operator[](const difference_type n) const
+		noexcept(noexcept(std::declval<iterator>() + n) && noexcept(std::declval<const_iterator>().operator*())) {
+			return *(*this + n);
+		}
+		
+		constexpr const_iterator& operator++(void) noexcept(noexcept(++Iter)) {
+			++Iter;
+			return *this;
+		}
+		
+		constexpr const_iterator operator++(const int) noexcept(std::is_nothrow_copy_constructible_v<const_iterator> &&
+		                                                        noexcept(++std::declval<const_iterator>())) {
+			const_iterator copy{*this};
+			++*this;
+			return copy;
+		}
+		
+		constexpr const_iterator& operator--(void) noexcept(noexcept(--Iter)) {
+			--Iter;
+			return *this;
+		}
+		
+		constexpr const_iterator operator--(const int) noexcept(std::is_nothrow_copy_constructible_v<const_iterator> &&
+		                                                        noexcept(--std::declval<const_iterator>())) {
+			const_iterator copy{*this};
+			--*this;
+			return copy;
+		}
+		
+		constexpr const_iterator& operator+=(const difference_type n) noexcept(noexcept(Iter += n)) {
+			Iter += n;
+			return *this;
+		}
+		
+		constexpr const_iterator& operator-=(const difference_type n) noexcept(noexcept(Iter -= n)) {
+			Iter -= n;
+			return *this;
+		}
+		
+		constexpr const_iterator operator+(const difference_type n) const
+				noexcept(noexcept(Iter + n) && std::is_nothrow_constructible_v<const_iterator, decltype(Iter + n)>) {
+			return Iter + n;
+		}
+		
+		constexpr const_iterator operator-(const difference_type n) const
+				noexcept(noexcept(Iter - n) && std::is_nothrow_constructible_v<const_iterator, decltype(Iter - n)>) {
+			return Iter - n;
+		}
+		
+		friend constexpr const_iterator operator+(const difference_type n, const_iterator iter)
+				noexcept(noexcept(iter += n)) {
+			return iter += n;
+		}
+		
+		constexpr difference_type operator-(const const_iterator& iter) const noexcept(noexcept(Iter - iter.Iter)) {
+			return Iter - iter.Iter;
+		}
+		
+		friend constexpr bool operator==(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1.Iter == iter2.Iter)) {
+			return iter1.Iter == iter2.Iter;
+		}
+		
+		friend constexpr bool operator!=(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1 == iter2)) {
+			return !(iter1 == iter2);
+		}
+		
+		friend constexpr bool operator<(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1.Iter < iter2.Iter)) {
+			return iter1.Iter < iter2.Iter;
+		}
+		
+		friend constexpr bool operator<=(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1 > iter2)) {
+			return !(iter1.Iter > iter2.Iter);
+		}
+		
+		friend constexpr bool operator>(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1.Iter > iter2.Iter)) {
+			return iter1.Iter > iter2.Iter;
+		}
+		
+		friend constexpr bool operator>=(const const_iterator& iter1, const const_iterator& iter2)
+				noexcept(noexcept(iter1 < iter2)) {
+			return !(iter1.Iter < iter2.Iter);
+		}
+	};
+	
 	constexpr ArraySet(void) = default;
 	
 	template<typename... Args,
@@ -46,6 +290,32 @@ class ArraySet {
 		constexprAlgo::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
 		makeUnique();
 		return;
+	}
+	
+	constexpr iterator begin(void) noexcept(std::is_nothrow_constructible_v<iterator, decltype(Begin)>) {
+		return Begin;
+	}
+	
+	constexpr iterator end(void) noexcept(std::is_nothrow_constructible_v<iterator, decltype(End)>) {
+		return End;
+	}
+	
+	constexpr const_iterator begin(void) const
+			noexcept(std::is_nothrow_constructible_v<const_iterator, decltype(Begin)>) {
+		return Begin;
+	}
+	
+	constexpr const_iterator end(void) const noexcept(std::is_nothrow_constructible_v<const_iterator, decltype(End)>) {
+		return End;
+	}
+	
+	constexpr const_iterator cbegin(void) const
+			noexcept(std::is_nothrow_constructible_v<const_iterator, decltype(Begin)>) {
+		return Begin;
+	}
+	
+	constexpr const_iterator cend(void) const noexcept(std::is_nothrow_constructible_v<const_iterator, decltype(End)>) {
+		return End;
 	}
 	
 	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
@@ -111,6 +381,16 @@ static_assert(SetType{5, true, 7, 'h'}.remove('9')   == SetType{5, true, 7, 'h'}
 static_assert(SetType{5, true, 7, 'h'}.remove('h')   == SetType{5, true, 7});
 static_assert(SetType{5, true, 7, 'h'}.remove(7)     == SetType{5, true, 'h'});
 static_assert(SetType{5}.remove(5)                   == SetType{});
+
+static_assert(*SetType{5, true, 7, 'h'}.begin() == 5);
+static_assert(*(SetType{5, true, 7, 'h'}.begin().operator->()) == 5);
+static_assert(*++SetType{5, true, 7, 'h'}.begin() != 5);
+static_assert(*++SetType{5, true, 7, 'h'}.begin() == true);
+static_assert(*SetType{5, true, 7, 'h'}.begin()++ == 5);
+static_assert(*(SetType{5, true, 7, 'h'}.begin() += 3) == 'h');
+static_assert(*(SetType{5, true, 7, 'h'}.begin() + 3) == 'h');
+static_assert(*(3 + SetType{5, true, 7, 'h'}.begin()) == 'h');
+static_assert(SetType{5, true, 7, 'h'}.begin()[3] == 'h');
 
 }
 
