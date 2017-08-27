@@ -281,6 +281,8 @@ class ArraySet {
 		}
 	};
 	
+	using value_type = typename decltype(Data)::value_type;
+	
 	constexpr ArraySet(void) = default;
 	
 	template<typename... Args,
@@ -343,6 +345,13 @@ class ArraySet {
 			++End;
 		} //if ( !contains(t) )
 		return *this;
+	}
+	
+	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
+	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	constexpr iterator insert(const iterator, Type&& t) {
+		insert(std::forward<Type>(t));
+		return End - 1;
 	}
 	
 	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
