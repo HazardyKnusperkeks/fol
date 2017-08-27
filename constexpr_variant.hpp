@@ -8,9 +8,19 @@
 #ifndef CONSTEXPR_VARIANT_HPP
 #define CONSTEXPR_VARIANT_HPP
 
+#include <exception>
 #include <type_traits>
 
+template<typename... Types>
+class ConstexprVariant;
+
 namespace details {
+template<typename T>
+struct IsVariant : std::false_type { };
+
+template<typename... Types>
+struct IsVariant<ConstexprVariant<Types...>> : std::true_type { };
+
 template<typename T, typename... Types>
 struct IndexOf : std::integral_constant<std::size_t, 0> {};
 
@@ -237,6 +247,42 @@ constexpr bool compare(const std::size_t index1, const VarUnion<Types1...>& u1,
 	} //else -> if constexpr ( sizeof...(Types1) == 0 )
 }
 
+template<typename SetType>
+constexpr void setVariant(std::size_t&, VarUnion<>&, const SetType&, const std::size_t = 0) {
+	throw std::logic_error{"setVariant types do not match!"};
+}
+
+template<typename Type, typename... Types, typename SetType>
+constexpr void setVariant(std::size_t& index, VarUnion<Type, Types...>& u, const SetType& t,
+                          const std::size_t counter = 0) {
+	if constexpr ( std::is_same_v<Type, SetType> ) {
+		index = counter;
+		u.First.Storage = t;
+	} //if constexpr ( std::is_same_v<Type, SetType> )
+	else {
+		setVariant(index, u.Rest, t, counter + 1);
+	} //else -> if constexpr ( std::is_same_v<Type, SetType> )
+	return;
+}
+
+template<typename... Types1, typename... Types2>
+constexpr void setVariant(std::size_t& destIndex, VarUnion<Types1...>& destU,
+                          const std::size_t srcIndex, const VarUnion<Types2...>& srcU) {
+	if constexpr ( sizeof...(Types2) == 0 ) {
+		//Nothing! Never called!
+		throw std::logic_error{"Called setVariant from an empty union!"};
+	} //if constexpr ( sizeof...(Types2) == 0 )
+	else {
+		if ( srcIndex == 0 ) {
+			setVariant(destIndex, destU, srcU.First.Storage);
+		} //if ( srcIndex == 0 )
+		else {
+			setVariant(destIndex, destU, srcIndex - 1, srcU.Rest);
+		} //else -> if ( srcIndex == 0 )
+	} //if constexpr ( sizeof...(Types2) == 0 )
+	return;
+}
+
 } //namespace details
 
 template<typename... Types>
@@ -260,7 +306,7 @@ class ConstexprVariant : protected details::VariantStorage<(std::is_trivially_de
 	public:
 	constexpr ConstexprVariant(void) = default;
 	
-	template<typename T>
+	template<typename T, std::enable_if_t<!details::IsVariant<std::decay_t<T>>::value>* = nullptr>
 	constexpr ConstexprVariant(T&& t) : Base{std::in_place_index<details::IndexOfV<T, Types...>>, std::forward<T>(t)} {
 		return;
 	}
@@ -277,6 +323,15 @@ class ConstexprVariant : protected details::VariantStorage<(std::is_trivially_de
 	template<typename T>
 	constexpr decltype(auto) get(void) const {
 		return get<details::IndexOfV<T, Types...>>();
+	}
+	
+	template<typename... Types2>
+	constexpr operator ConstexprVariant<Types2...>(void) const {
+		ConstexprVariant<Types2...> ret;
+		if ( index() != sizeof...(Types) ) {
+			details::setVariant(ret.Index, ret.U, index(), Base::U);
+		} //if ( index() != sizeof...(Types) )
+		return ret;
 	}
 	
 	friend constexpr bool operator==(const ConstexprVariant& lhs, const ConstexprVariant& rhs) noexcept {
@@ -298,6 +353,9 @@ class ConstexprVariant : protected details::VariantStorage<(std::is_trivially_de
 	friend constexpr bool operator!=(const ConstexprVariant<Types...>& lhs, const ConstexprVariant<Types2...>& rhs) noexcept {
 		return !(lhs == rhs);
 	}
+	
+	template<typename... Types2>
+	friend class ConstexprVariant;
 };
 
 template<typename... Types1, typename... Types2>
