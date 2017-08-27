@@ -7,6 +7,7 @@
 #define ARRAY_SET_HPP
 
 #include "constexpr_algorithm.hpp"
+#include "constexpr_iterator.hpp"
 #include "constexpr_variant.hpp"
 
 #include <array>
@@ -377,6 +378,41 @@ class ArraySet {
 	}
 };
 
+template<std::size_t N, typename... Types>
+class AdaptableArraySet : public ArraySet<N, Types...> {
+	using Base = ArraySet<N, Types...>;
+	
+	public:
+	using Base::Base;
+	
+	constexpr AdaptableArraySet(Base base) : Base(std::move(base)) {
+		return;
+	}
+	
+	using Base::contains;
+	
+	template<typename Type, std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Type>, Types>> && ...)>* = nullptr>
+	constexpr bool contains(const Type&) const noexcept {
+		return false;
+	}
+	
+	using Base::remove;
+	
+	template<typename Type, std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Type>, Types>> && ...)>* = nullptr>
+	constexpr AdaptableArraySet& remove(const Type&) noexcept {
+		return *this;
+	}
+	
+	using Base::insert;
+	
+	template<typename Type, std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Type>, Types>> && ...)>* = nullptr>
+	[[nodiscard]] constexpr AdaptableArraySet<N, Types..., Type> insert(Type&& t) {
+		AdaptableArraySet<N, Types..., Type> ret;
+		constexprStd::copy(Base::cbegin(), Base::cend(), constexprStd::inserter(ret, ret.end()));
+		return ret.insert(std::forward<Type>(t));
+	}
+};
+
 namespace tests {
 using SetType = ArraySet<10, int, bool, char>;
 
@@ -412,6 +448,16 @@ static_assert(*(SetType{5, true, 7, 'h'}.begin() + 3) == 'h');
 static_assert(*(3 + SetType{5, true, 7, 'h'}.begin()) == 'h');
 static_assert(SetType{5, true, 7, 'h'}.begin()[3] == 'h');
 
+using Adaptable1 = AdaptableArraySet<10, int, bool>;
+using Adaptable2 = AdaptableArraySet<10, int, bool, char>;
+
+static_assert(!Adaptable1{5, true}.contains(7.5));
+static_assert(Adaptable1{5, true}.contains(5));
+static_assert(Adaptable1{5, true}.remove(7.5) == Adaptable1{5, true});
+static_assert(Adaptable1{5, true}.remove('h') == Adaptable1{5, true});
+static_assert(Adaptable1{5, true}.remove(5)   == Adaptable1{true});
+static_assert(Adaptable1{5, true}.insert(7)   == Adaptable1{5, 7, true});
+static_assert(Adaptable1{5, true}.insert('7') == Adaptable2{5, '7', true});
 }
 
 #endif
