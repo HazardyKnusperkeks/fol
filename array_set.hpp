@@ -318,6 +318,14 @@ class ArraySet {
 		return End;
 	}
 	
+	constexpr std::size_t size(void) const noexcept {
+		return Index;
+	}
+	
+	constexpr bool empty(void) const noexcept {
+		return Index == 0;
+	}
+	
 	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr bool contains(const Type& t) const noexcept {
 		return constexprAlgo::find(Begin, End, t) != End;
