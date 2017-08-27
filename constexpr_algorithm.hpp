@@ -9,7 +9,7 @@
 #include <iterator>
 #include <type_traits>
 
-namespace constexprAlgo {
+namespace constexprStd {
 
 template<typename InputIterator>
 constexpr auto distance(const InputIterator first, const InputIterator last);
@@ -216,8 +216,8 @@ constexpr bool is_permutation(ForwardIterator1 first1, const ForwardIterator1 la
 	using It2IsRA = std::is_same<Cat2, std::random_access_iterator_tag>;
 	constexpr bool raIters = It1IsRA::value && It2IsRA::value;
 	if ( raIters ) {
-		const auto d1 = constexprAlgo::distance(first1, last1);
-		const auto d2 = constexprAlgo::distance(first2, last2);
+		const auto d1 = constexprStd::distance(first1, last1);
+		const auto d2 = constexprStd::distance(first2, last2);
 		if ( d1 != d2 ) {
 			return false;
 		} //if ( d1 != d2 )
@@ -237,8 +237,8 @@ constexpr bool is_permutation(ForwardIterator1 first1, const ForwardIterator1 la
 		} //if ( first1 == last1 )
 	} //if ( raIters )
 	else {
-		const auto d1 = constexprAlgo::distance(first1, last1);
-		const auto d2 = constexprAlgo::distance(first2, last2);
+		const auto d1 = constexprStd::distance(first1, last1);
+		const auto d2 = constexprStd::distance(first2, last2);
 		
 		if ( d1 == 0 && d2 == 0 ) {
 			return true;
@@ -326,6 +326,6 @@ constexpr bool is_permutation(const ForwardIterator1 first1, const ForwardIterat
 	return details::is_permutation(first1, last1, first2, last2, details::ops::IterEqualToIter{});
 }
 
-} //namespace constexprAlgo
+} //namespace constexprStd
 
 #endif

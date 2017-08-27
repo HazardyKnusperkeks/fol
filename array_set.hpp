@@ -22,17 +22,17 @@ class ArraySet {
 	
 	constexpr void makeUnique(void) {
 		auto iter = Begin;
-		constexprAlgo::advance(iter, 1);
+		constexprStd::advance(iter, 1);
 		while ( iter != End ) {
-			if ( constexprAlgo::find(Begin, iter, *iter) != iter ) {
+			if ( constexprStd::find(Begin, iter, *iter) != iter ) {
 				//Found a duplicate!
 				--End;
 				--Index;
 				*iter = std::move(*End);
-			} //if ( constexprAlgo::find(Begin, iter, *iter) != iter )
+			} //if ( constexprStd::find(Begin, iter, *iter) != iter )
 			else {
 				++iter;
-			} //else -> if ( constexprAlgo::find(Begin, iter, *iter) != iter )
+			} //else -> if ( constexprStd::find(Begin, iter, *iter) != iter )
 		} //while ( iter != End )
 		return;
 	}
@@ -287,7 +287,7 @@ class ArraySet {
 	         std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Args>, ArraySet>> && ...)>* = nullptr>
 	constexpr ArraySet(Args&&... args) : Data{std::forward<Args>(args)...}, Index{sizeof...(Args)} {
 		static_assert(sizeof...(Args) <= N, "More initializers than elements in the set allowed!");
-		constexprAlgo::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
+		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
 		makeUnique();
 		return;
 	}
@@ -328,7 +328,7 @@ class ArraySet {
 	
 	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr bool contains(const Type& t) const noexcept {
-		return constexprAlgo::find(Begin, End, t) != End;
+		return constexprStd::find(Begin, End, t) != End;
 	}
 	
 	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
@@ -345,7 +345,7 @@ class ArraySet {
 	
 	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr ArraySet remove(const Type& t) {
-		auto iter = constexprAlgo::find(Begin, End, t);
+		auto iter = constexprStd::find(Begin, End, t);
 		if ( iter != End ) {
 			--Index;
 			--End;
@@ -356,7 +356,7 @@ class ArraySet {
 	
 	template<std::size_t N2>
 	constexpr bool operator==(const ArraySet<N2, Types...>& rhs) const noexcept {
-		return constexprAlgo::is_permutation(Begin, End, rhs.Begin, rhs.End);
+		return constexprStd::is_permutation(Begin, End, rhs.Begin, rhs.End);
 	}
 	
 	template<std::size_t N2>
