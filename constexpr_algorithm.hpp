@@ -271,6 +271,14 @@ constexpr void advance(InputIterator& i, const Distance n) {
 	return;
 }
 
+template<typename InputIterator, typename OutputIterator>
+constexpr OutputIterator copy(InputIterator sourceFirst, const InputIterator sourceLast, OutputIterator destination) {
+	for ( ; sourceFirst != sourceLast; ++sourceFirst, ++destination ) {
+		*destination = *sourceFirst;
+	} //for ( ; sourceFirst != sourceLast; ++sourceFirst, ++destination )
+	return destination;
+}
+
 template<typename InputIterator>
 constexpr auto distance(const InputIterator first, const InputIterator last) {
 	return details::distance(first, last, typename std::iterator_traits<InputIterator>::iterator_category{});
