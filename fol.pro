@@ -40,6 +40,7 @@ HEADERS		 = and.hpp\
 			   array_set.hpp\
 			   asserts.hpp\
 			   constexpr_algorithm.hpp\
+			   constexpr_iterator.hpp\
 			   constexpr_variant.hpp\
 			   equality.hpp\
 			   equivalent.hpp\
