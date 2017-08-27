@@ -326,12 +326,14 @@ class ArraySet {
 		return Index == 0;
 	}
 	
-	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
+	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr bool contains(const Type& t) const noexcept {
 		return constexprStd::find(Begin, End, t) != End;
 	}
 	
-	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
+	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr ArraySet insert(Type&& t) {
 		if ( !contains(t) ) {
 			if ( ++Index == N ) {
@@ -343,7 +345,8 @@ class ArraySet {
 		return *this;
 	}
 	
-	template<typename Type, std::enable_if_t<(std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
+	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
+	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr ArraySet remove(const Type& t) {
 		auto iter = constexprStd::find(Begin, End, t);
 		if ( iter != End ) {
