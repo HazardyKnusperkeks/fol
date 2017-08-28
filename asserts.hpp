@@ -13,6 +13,7 @@
 #include "forall.hpp"
 #include "function.hpp"
 #include "implies.hpp"
+#include "name.hpp"
 #include "not.hpp"
 #include "or.hpp"
 #include "predicate.hpp"
@@ -21,6 +22,10 @@
 #include <type_traits>
 
 namespace fol {
+
+static_assert(0_name == Name<'0'>{});
+static_assert(0xABCD_name == Name<'0', 'x', 'A', 'B', 'C', 'D'>{});
+static_assert("test"_name == Name<'t', 'e', 's', 't'>{});
 
 static_assert(std::is_nothrow_default_constructible_v<Variable<'x'>>);
 static_assert(std::is_nothrow_default_constructible_v<Variable<'x', 'y'>>);
