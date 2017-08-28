@@ -10,6 +10,7 @@
 
 #include <exception>
 #include <type_traits>
+#include <utility>
 
 template<typename... Types>
 class ConstexprVariant;
