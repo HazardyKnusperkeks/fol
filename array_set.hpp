@@ -340,9 +340,9 @@ class ArraySet {
 	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
 	constexpr ArraySet insert(Type&& t) {
 		if ( !contains(t) ) {
-			if ( ++Index == N ) {
+			if ( Index++ == N ) {
 				throw std::out_of_range("ArraySet: Trying to insert more values than configured!");
-			} //if ( ++Index == N )
+			} //if ( Index++ == N )
 			*End = std::forward<Type>(t);
 			++End;
 		} //if ( !contains(t) )
