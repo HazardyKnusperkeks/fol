@@ -9,6 +9,7 @@
 #include "forward.hpp"
 
 #include "and.hpp"
+#include "array_set.hpp"
 #include "helper.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
@@ -32,6 +33,7 @@ struct Or {
 	std::tuple<Ts...> ts;
 	
 	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Ts::VariableCount::value)>;
+	using VariableArray = decltype((ArraySet<0>{} + ... + typename Ts::VariableArray{}));
 	
 	constexpr Or(void) = default;
 	constexpr Or(Ts... t) noexcept((std::is_nothrow_move_constructible_v<Ts> && ...) &&

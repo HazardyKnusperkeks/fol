@@ -6,6 +6,7 @@
 #ifndef FOL_FUNCTION_HPP
 #define FOL_FUNCTION_HPP
 
+#include "array_set.hpp"
 #include "helper.hpp"
 #include "name.hpp"
 #include "traits.hpp"
@@ -38,6 +39,7 @@ struct Function {
 	std::tuple<Args...> A;
 	
 	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Args::VariableCount::value)>;
+	using VariableArray = decltype((ArraySet<0>{} + ... + typename Args::VariableArray{}));
 	
 	constexpr Function(void) = default;
 	
