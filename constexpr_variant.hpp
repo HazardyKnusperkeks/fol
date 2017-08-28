@@ -138,6 +138,10 @@ struct VariantStorage<false, Types...> {
 		return;
 	}
 	
+	constexpr VariantStorage(const VariantStorage& v) : U{v.U}, Index{v.Index} {
+		return;
+	}
+	
 	constexpr VariantStorage(VariantStorage&& v) : U{std::move(v.U)}, Index{v.Index} {
 		v.Index = sizeof...(Types);
 		return;
