@@ -42,7 +42,7 @@ class insert_iterator {
 	}
 	
 	constexpr insert_iterator& operator=(CValueType&& value)
-			/*noexcept(noexcept(Iter = C->insert(Iter, std::move(value))) && noexcept(++Iter))*/ {
+			noexcept(noexcept(Iter = C->insert(Iter, std::move(value))) && noexcept(++Iter)) {
 		Iter = C->insert(Iter, std::move(value));
 		++Iter;
 		return *this;
