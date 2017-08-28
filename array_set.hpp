@@ -176,12 +176,13 @@ class ArraySet {
 		}
 		
 		constexpr const_iterator(const iterator iter)
-				noexcept(std::is_nothrow_copy_constructible_v<Base, iterator::Base>) : Iter{iter.Iter} {
+				noexcept(std::is_nothrow_constructible_v<Base, iterator::Base>) : Iter{iter.Iter} {
 			return;
 		}
 		
 		constexpr const_iterator(iterator&& iter)
-				noexcept(std::is_nothrow_move_constructible_v<Base, iterator::Base>) : Iter{std::move(iter.Iter)} {
+				noexcept(std::is_nothrow_constructible_v<Base, std::add_rvalue_reference_t<typename iterator::Base>>) :
+				Iter{std::move(iter.Iter)} {
 			return;
 		}
 		
