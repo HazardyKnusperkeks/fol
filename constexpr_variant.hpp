@@ -148,9 +148,9 @@ struct VariantStorage<false, Types...> {
 	}
 	
 	constexpr VariantStorage& operator=(VariantStorage&& v) {
-		using std::swap;
-		swap(U,     v.U);
-		swap(Index, v.Index);
+		U = std::move(v.U);
+		Index = v.Index;
+		v.Index = sizeof...(Types);
 		return *this;
 	}
 	
