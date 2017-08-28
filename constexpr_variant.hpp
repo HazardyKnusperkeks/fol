@@ -147,6 +147,13 @@ struct VariantStorage<false, Types...> {
 		return;
 	}
 	
+	constexpr VariantStorage& operator=(const VariantStorage& v) {
+		VariantStorage copy(v);
+		using std::swap;
+		swap(copy, *this);
+		return *this;
+	}
+	
 	constexpr VariantStorage& operator=(VariantStorage&& v) {
 		U = std::move(v.U);
 		Index = v.Index;
