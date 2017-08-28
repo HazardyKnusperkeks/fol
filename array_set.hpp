@@ -15,6 +15,41 @@
 #include <utility>
 
 template<std::size_t N, typename... Types>
+class ArraySet;
+
+namespace details {
+template<typename... Types>
+struct TypeHolder { };
+
+template<std::size_t N, typename... Types>
+constexpr ArraySet<N, Types...> toArraySet(const std::integral_constant<std::size_t, N>,
+                                           const TypeHolder<Types...>) noexcept {
+	return {};
+}
+
+template<typename... Types>
+constexpr TypeHolder<Types...> getCommonType(const TypeHolder<Types...>, const TypeHolder<>) noexcept {
+	return {};
+}
+
+template<typename... Types1, typename Type, typename... Types2>
+constexpr auto getCommonType(const TypeHolder<Types1...>, const TypeHolder<Type, Types2...>) noexcept {
+	if constexpr ( (std::is_same_v<Type, Types1> || ... ) ) {
+		return getCommonType(TypeHolder<Types1...>{}, TypeHolder<Types2...>{});
+	} //if constexpr ( (std::is_same_v<Type, Types1> || ... ) )
+	else {
+		return getCommonType(TypeHolder<Types1..., Type>{}, TypeHolder<Types2...>{});
+	} //else -> if constexpr ( (std::is_same_v<Type, Types1> || ... ) )
+}
+
+template<std::size_t N1, typename... Types1, std::size_t N2, typename... Types2>
+constexpr auto getCommonType(const ArraySet<N1, Types1...>&, const ArraySet<N2, Types2...>&) noexcept {
+	return toArraySet(std::integral_constant<std::size_t, N1 + N2>{},
+	                  getCommonType(TypeHolder<Types1...>{}, TypeHolder<Types2...>{}));
+}
+} //namespace details
+
+template<std::size_t N, typename... Types>
 class ArraySet {
 	std::array<ConstexprVariant<Types...>, N> Data;
 	std::size_t Index = 0;
@@ -378,6 +413,14 @@ class ArraySet {
 		return !operator==(rhs);
 	}
 };
+
+template<std::size_t N1, typename... Types1, std::size_t N2, typename... Types2>
+constexpr auto operator+(const ArraySet<N1, Types1...>& set1, const ArraySet<N2, Types2...>& set2) {
+	decltype(details::getCommonType(set1, set2)) ret{};
+	constexprStd::copy(set1.begin(), set1.end(), constexprStd::inserter(ret, ret.end()));
+	constexprStd::copy(set2.begin(), set2.end(), constexprStd::inserter(ret, ret.end()));
+	return ret;
+}
 
 template<std::size_t N, typename... Types>
 class AdaptableArraySet : public ArraySet<N, Types...> {
