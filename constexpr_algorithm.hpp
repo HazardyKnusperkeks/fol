@@ -181,21 +181,21 @@ constexpr RandomAccessIterator find_if(RandomAccessIterator first, const RandomA
 			} //if ( pred(first) )
 			++first;
 		} //case 3
-		[[fallthrough]]
+		[[fallthrough]];
 		case 2 : {
 			if ( pred(first) ) {
 				return first;
 			} //if ( pred(first) )
 			++first;
 		} //case 2
-		[[fallthrough]]
+		[[fallthrough]];
 		case 1 : {
 			if ( pred(first) ) {
 				return first;
 			} //if ( pred(first) )
 			++first;
 		} //case 1
-//		[[fallthrough]]
+//		[[fallthrough]];
 	} //switch ( last - first )
 	return last;
 }
