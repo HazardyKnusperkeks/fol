@@ -71,6 +71,6 @@ struct PrettyPrinter<Not<T>> {
 	}
 };
 
-}
+} //namespace fol
 
 #endif

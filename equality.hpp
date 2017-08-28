@@ -78,6 +78,6 @@ struct PrettyPrinter<Equality<T1, T2>> {
 	}
 };
 
-}
+} //namespace fol
 
 #endif

@@ -89,6 +89,6 @@ constexpr bool operator!=(const Function<Name1T, Args1...> f1, const Function<Na
 	return !(f1 == f2);
 }
 
-}
+} //namespace fol
 
 #endif

@@ -98,7 +98,7 @@ constexpr auto toNegationNormalFormTuple(const std::tuple<Ts...>& t) {
 	return toNegationNormalFormTupleImpl(t, std::index_sequence_for<Ts...>());
 }
 
-}
+} //namespace details
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::tuple<T>& t) {
@@ -110,6 +110,6 @@ std::ostream& operator<<(std::ostream& os, const std::tuple<Ts...>& t) {
 	return details::print(os, t, ", ", std::index_sequence_for<Ts...>{});
 }
 
-}
+} //namespace fol
 
 #endif

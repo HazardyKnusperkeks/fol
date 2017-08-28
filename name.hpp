@@ -131,7 +131,7 @@ constexpr auto nameNext(const Name<String...>) noexcept {
 		return fromHelper(temp);
 	} //else -> if constexpr ( temp.ChangePrevious )
 }
-}
+} //namespace details
 
 template<char... String>
 class Name {
