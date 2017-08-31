@@ -16,7 +16,7 @@
 namespace fol {
 
 template<char... String>
-struct Name;
+class Name;
 
 namespace details {
 constexpr char toLower(const char c) noexcept {
