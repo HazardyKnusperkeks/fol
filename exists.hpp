@@ -64,7 +64,7 @@ struct PrettyPrinter<Exists<Var, Form>> {
 	const Exists<Var, Form>& E;
 	const int Index;
 	
-	PrettyPrinter(const Exists<Var, Form>& e, const int index = 0) : E(e), Index(index) {
+	PrettyPrinter(const Exists<Var, Form>& e, const int index = 0) : E{e}, Index{index} {
 		return;
 	}
 	

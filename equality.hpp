@@ -30,7 +30,7 @@ struct Equality {
 	
 	constexpr Equality(T1 t1, T2 t2)
 			noexcept(std::is_nothrow_move_constructible_v<T1> && std::is_nothrow_move_constructible_v<T2>) :
-			Term1(std::move(t1)), Term2(std::move(t2)) {
+			Term1{std::move(t1)}, Term2{std::move(t2)} {
 		return;
 	}
 	
@@ -63,7 +63,7 @@ struct PrettyPrinter<Equality<T1, T2>> {
 	const Equality<T1, T2>& E;
 	const int Index;
 	
-	PrettyPrinter(const Equality<T1, T2>& e, int index = -1) : E(e), Index(index) {
+	PrettyPrinter(const Equality<T1, T2>& e, int index = -1) : E{e}, Index{index} {
 		return;
 	}
 	

@@ -429,7 +429,7 @@ class AdaptableArraySet : public ArraySet<N, Types...> {
 	public:
 	using Base::Base;
 	
-	constexpr AdaptableArraySet(Base base) : Base(std::move(base)) {
+	constexpr AdaptableArraySet(Base base) : Base{std::move(base)} {
 		return;
 	}
 	

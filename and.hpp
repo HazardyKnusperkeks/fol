@@ -37,7 +37,7 @@ struct And {
 	
 	constexpr And(void) = default;
 	constexpr And(Ts... t) noexcept((std::is_nothrow_move_constructible_v<Ts> && ...) &&
-	                                noexcept(std::make_tuple(std::move(t)...))) : ts(std::make_tuple(std::move(t)...)) {
+	                                noexcept(std::make_tuple(std::move(t)...))) : ts{std::make_tuple(std::move(t)...)} {
 		return;
 	}
 	
@@ -78,7 +78,7 @@ struct PrettyPrinter<And<Ts...>> {
 	const And<Ts...>& A;
 	const int Index;
 	
-	PrettyPrinter(const And<Ts...>& a, int index = -1) : A(a), Index(index) {
+	PrettyPrinter(const And<Ts...>& a, int index = -1) : A{a}, Index{index} {
 		return;
 	}
 	

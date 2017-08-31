@@ -44,8 +44,8 @@ struct Predicate {
 	constexpr Predicate(NameT n, Args... a)
 			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
 			         (std::is_nothrow_move_constructible_v<Args> && ...) &&
-			         noexcept(std::make_tuple(std::move(a)...))) : N(std::move(n)),
-			A(std::make_tuple(std::move(a)...)) {
+	                 noexcept(std::make_tuple(std::move(a)...))) : N{std::move(n)},
+			A{std::make_tuple(std::move(a)...)} {
 		return;
 	}
 	
@@ -94,7 +94,7 @@ template<typename NameT, typename... Args>
 struct PrettyPrinter<Predicate<NameT, Args...>> {
 	const Predicate<NameT, Args...>& P;
 	
-	PrettyPrinter(const Predicate<NameT, Args...>& p, const int = -1) : P(p) {
+	PrettyPrinter(const Predicate<NameT, Args...>& p, const int = -1) : P{p} {
 		return;
 	}
 	

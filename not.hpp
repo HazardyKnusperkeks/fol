@@ -63,7 +63,7 @@ struct PrettyPrinter<Not<T>> {
 	const Not<T>& N;
 	const int Index;
 	
-	PrettyPrinter(const Not<T>& n, int index = -1) : N(n), Index(index) {
+	PrettyPrinter(const Not<T>& n, int index = -1) : N{n}, Index{index} {
 		return;
 	}
 	

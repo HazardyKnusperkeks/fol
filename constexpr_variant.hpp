@@ -41,7 +41,7 @@ struct Uninitialized<Type, true> {
 	Type Storage;
 	
 	template<typename... Args>
-	constexpr Uninitialized(Args&&... args) : Storage(std::forward<Args>(args)...) {
+	constexpr Uninitialized(Args&&... args) : Storage{std::forward<Args>(args)...} {
 		return;
 	}
 	
@@ -90,13 +90,13 @@ union VarUnion<Head, Tail...> {
 	}
 	
 	template<typename... Args>
-	constexpr VarUnion(const std::in_place_index_t<0>, Args&&... args) : First(std::forward<Args>(args)...) {
+	constexpr VarUnion(const std::in_place_index_t<0>, Args&&... args) : First{std::forward<Args>(args)...} {
 		return;
 	}
 	
 	template<std::size_t I, typename... Args>
 	constexpr VarUnion(const std::in_place_index_t<I>, Args&&... args) :
-			Rest(std::in_place_index<I-1>, std::forward<Args>(args)...) {
+			Rest{std::in_place_index<I-1>, std::forward<Args>(args)...} {
 		return;
 	}
 };

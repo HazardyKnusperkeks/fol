@@ -62,7 +62,7 @@ struct PrettyPrinter<Equivalent<T1, T2>> {
 	const Equivalent<T1, T2>& E;
 	const int Index;
 	
-	PrettyPrinter(const Equivalent<T1, T2>& e, int index = -1) : E(e), Index(index) {
+	PrettyPrinter(const Equivalent<T1, T2>& e, int index = -1) : E{e}, Index{index} {
 		return;
 	}
 	

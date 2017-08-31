@@ -46,8 +46,8 @@ struct Function {
 	constexpr Function(NameT n, Args... a)
 			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
 			         (std::is_nothrow_move_constructible_v<Args> && ...) &&
-			         noexcept(std::make_tuple(std::move(a)...))) : N(std::move(n)),
-			A(std::make_tuple(std::move(a)...)) {
+			         noexcept(std::make_tuple(std::move(a)...))) : N{std::move(n)},
+			A{std::make_tuple(std::move(a)...)} {
 		return;
 	}
 	

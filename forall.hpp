@@ -64,7 +64,7 @@ struct PrettyPrinter<ForAll<Var, Form>> {
 	const ForAll<Var, Form>& FA;
 	const int Index;
 	
-	PrettyPrinter(const ForAll<Var, Form>& fa, const int index = 0) : FA(fa), Index(index) {
+	PrettyPrinter(const ForAll<Var, Form>& fa, const int index = 0) : FA{fa}, Index{index} {
 		return;
 	}
 	

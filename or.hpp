@@ -37,7 +37,7 @@ struct Or {
 	
 	constexpr Or(void) = default;
 	constexpr Or(Ts... t) noexcept((std::is_nothrow_move_constructible_v<Ts> && ...) &&
-	                               noexcept(std::make_tuple(std::move(t)...))) : ts(std::make_tuple(std::move(t)...)) {
+	                               noexcept(std::make_tuple(std::move(t)...))) : ts{std::make_tuple(std::move(t)...)} {
 		return;
 	}
 	
@@ -78,7 +78,7 @@ struct PrettyPrinter<Or<Ts...>> {
 	const Or<Ts...>& O;
 	const int Index;
 	
-	PrettyPrinter(const Or<Ts...>& o, int index = -1) : O(o), Index(index) {
+	PrettyPrinter(const Or<Ts...>& o, int index = -1) : O{o}, Index{index} {
 		return;
 	}
 	

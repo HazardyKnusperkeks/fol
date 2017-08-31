@@ -60,7 +60,7 @@ struct PrettyPrinter<Implies<T1, T2>> {
 	const Implies<T1, T2>& I;
 	const int Index;
 	
-	PrettyPrinter(const Implies<T1, T2>& i, int index = -1) : I(i), Index(index) {
+	PrettyPrinter(const Implies<T1, T2>& i, int index = -1) : I{i}, Index{index} {
 		return;
 	}
 	
