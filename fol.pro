@@ -34,7 +34,26 @@ gcc {
 	QMAKE_CXXFLAGS	*= $$extraWarnings
 }
 
-SOURCES		 = main.cpp
+SOURCES		 = and.cpp\
+			   array_set.cpp\
+			   constexpr_algorithm.cpp\
+			   constexpr_iterator.cpp\
+			   constexpr_variant.cpp\
+			   equality.cpp\
+			   equivalent.cpp\
+			   exists.cpp\
+			   forall.cpp\
+			   function.cpp\
+			   helper.cpp\
+			   implies.cpp\
+			   name.cpp\
+			   not.cpp\
+			   or.cpp\
+			   predicate.cpp\
+			   pretty_printer.cpp\
+			   traits.cpp\
+			   variable.cpp\
+			   main.cpp
 
 HEADERS		 = and.hpp\
 			   array_set.hpp\
