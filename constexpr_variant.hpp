@@ -9,6 +9,7 @@
 #define CONSTEXPR_VARIANT_HPP
 
 #include <exception>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 
