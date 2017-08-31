@@ -12,7 +12,7 @@
 
 namespace fol {
 
-std::vector<std::pair<char, char>> PrettyParanthesis = {{'(', ')'}, {'[', ']'}, {'{', '}'}};
+inline std::vector<std::pair<char, char>> PrettyParanthesis = {{'(', ')'}, {'[', ']'}, {'{', '}'}};
 
 template<typename T>
 struct PrettyPrinter { };
