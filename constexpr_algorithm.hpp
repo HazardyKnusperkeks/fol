@@ -4,7 +4,7 @@
  */
 
 #ifndef CONSTEXPR_ALGORITHM_HPP
-#define CONSTEXPR_AGLROTIHM_HPP
+#define CONSTEXPR_ALGORITHM_HPP
 
 #include <iterator>
 #include <type_traits>
