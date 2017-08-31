@@ -26,8 +26,8 @@ struct Equivalent {
 	using VariableArray = decltype(ArraySet<0>{} + typename T1::VariableArray{} + typename T1::VariableArray{});
 	
 	constexpr auto simplified(void) const {
-		auto leftImplies = Implies{t1, t2}.simplified();
-		auto rightImplies = Implies{t2, t1}.simplified();
+		auto leftImplies  = Implies<T1, T2>{t1, t2}.simplified();
+		auto rightImplies = Implies<T2, T1>{t2, t1}.simplified();
 		return And{leftImplies, rightImplies};
 	}
 	
