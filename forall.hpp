@@ -21,28 +21,28 @@ template<typename Var, typename Form>
 struct ForAll {
 	static_assert(IsVariable<Var>::value, "The first parameter has to be a variable!");
 	static_assert(IsFormula<Form>::value, "The secnd parameter has to be a formula!");
-	Var v;
-	Form f;
+	Var V;
+	Form F;
 	
 	using VariableCount = std::integral_constant<std::size_t, 1 + Form::VariableCount::value>;
 	using VariableArray = decltype(ArraySet<1, Var>{} + typename Form::VariableArray{});
 	
 	constexpr auto simplified(void) const {
-		auto form = f.simplified();
-		return ForAll<Var, std::decay_t<decltype(form)>>{v, form};
+		auto form = F.simplified();
+		return ForAll<Var, std::decay_t<decltype(form)>>{V, form};
 	}
 	
 	constexpr auto negate(void) const {
-		return Exists{v, Not<Form>{f}.toNegationNormalForm()};
+		return Exists{V, Not<Form>{F}.toNegationNormalForm()};
 	}
 	
 	constexpr auto toNegationNormalForm(void) const {
-		auto form = f.toNegationNormalForm();
-		return ForAll<Var, std::decay_t<decltype(form)>>{v, form};
+		auto form = F.toNegationNormalForm();
+		return ForAll<Var, std::decay_t<decltype(form)>>{V, form};
 	}
 	
 	friend std::ostream& operator<<(std::ostream& os, const ForAll& f) {
-		return os<<'A'<<f.v<<": "<<f.f;
+		return os<<'A'<<f.V<<": "<<f.F;
 	}
 };
 
@@ -51,7 +51,7 @@ ForAll(Var, Form) -> ForAll<Var, Form>;
 
 template<typename Var1, typename Form1, typename Var2, typename Form2>
 constexpr bool operator==(const ForAll<Var1, Form1>& f1, const ForAll<Var2, Form2>& f2) noexcept {
-	return f1.v == f2.v && f1.f == f2.f;
+	return f1.V == f2.V && f1.F == f2.F;
 }
 
 template<typename Var1, typename Form1, typename Var2, typename Form2>
@@ -70,11 +70,11 @@ struct PrettyPrinter<ForAll<Var, Form>> {
 	
 	std::ostream& prettyPrint(std::ostream& os) const {
 		const bool withParanthesis = !IsQuantifier<Form>::value;
-		os<<'A'<<FA.v;
+		os<<'A'<<FA.V;
 		if ( withParanthesis ) {
 			os<<": "<<PrettyParanthesis[static_cast<std::size_t>(Index)].first;
 		} //if ( withParanthesis )
-		os<<PrettyPrinter<Form>{FA.f, withParanthesis ? (Index + 1) % static_cast<int>(PrettyParanthesis.size()) : Index};
+		os<<PrettyPrinter<Form>{FA.F, withParanthesis ? (Index + 1) % static_cast<int>(PrettyParanthesis.size()) : Index};
 		if ( withParanthesis ) {
 			os<<PrettyParanthesis[static_cast<std::size_t>(Index)].second;
 		} //if ( withParanthesis )
