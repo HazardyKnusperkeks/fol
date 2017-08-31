@@ -175,11 +175,6 @@ std::ostream& operator<<(std::ostream& os, const Name<String...>) noexcept {
 	return os;
 }
 
-template<typename CharT, CharT... String>
-constexpr Name<String...> operator""_name(void) {
-	return {};
-}
-
 template<char... String>
 constexpr Name<String...> operator""_name(void) {
 	return {};
