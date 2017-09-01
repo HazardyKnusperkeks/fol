@@ -318,6 +318,13 @@ constexpr bool equal(IterT1 first1, const IterT1 last1, IterT2 first2, const Ite
 	return first1 == last1 && first2 == last2;
 }
 
+template<typename T, typename U = T>
+constexpr T exchange(T& object, U&& newValue) {
+	T ret{std::move(object)};
+	object = std::forward<U>(newValue);
+	return ret;
+}
+
 template<typename InputIter, typename T>
 constexpr InputIter find(InputIter begin, const InputIter end, const T& t) {
 	for ( ; begin != end; ++begin ) {
