@@ -401,7 +401,7 @@ class ArraySet {
 	
 	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
 	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
-	constexpr ArraySet insert(Type&& t) {
+	constexpr ArraySet& insert(Type&& t) {
 		if ( !contains(t) ) {
 			if ( Index++ == N ) {
 				throw std::out_of_range("ArraySet: Trying to insert more values than configured!");
@@ -421,7 +421,7 @@ class ArraySet {
 	
 	template<typename Type, std::enable_if_t<std::is_same_v<std::decay_t<Type>, value_type> ||
 	                                         (std::is_same_v<std::decay_t<Type>, Types> || ...)>* = nullptr>
-	constexpr ArraySet remove(const Type& t) {
+	constexpr ArraySet& remove(const Type& t) {
 		auto iter = constexprStd::find(Begin, End, t);
 		if ( iter != End ) {
 			--Index;
