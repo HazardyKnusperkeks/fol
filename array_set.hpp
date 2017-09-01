@@ -433,7 +433,7 @@ class ArraySet {
 	
 	template<std::size_t N2>
 	constexpr bool operator==(const ArraySet<N2, Types...>& rhs) const noexcept {
-		return constexprStd::is_permutation(Begin, End, rhs.Begin, rhs.End);
+		return constexprStd::is_permutation(begin(), end(), rhs.begin(), rhs.end());
 	}
 	
 	template<std::size_t N2>
