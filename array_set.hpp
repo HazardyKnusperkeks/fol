@@ -329,7 +329,7 @@ class ArraySet {
 	}
 	
 	constexpr ArraySet(ArraySet&& a) noexcept(std::is_nothrow_move_constructible_v<decltype(Data)>) :
-			Data{std::move(a.Data)}, Index{a.Index} {
+			Data{std::move(a.Data)}, Index{constexprStd::exchange(a.Index, 0u)} {
 		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
 		return;
 	}
@@ -343,7 +343,7 @@ class ArraySet {
 	
 	constexpr ArraySet& operator=(ArraySet&& a) noexcept(std::is_nothrow_move_assignable_v<decltype(Data)>) {
 		Data  = std::move(a.Data);
-		Index = std::exchange(a.Index, 0);
+		Index = constexprStd::exchange(a.Index, 0u);
 		a.End = a.Begin;
 		End   = Begin;
 		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
