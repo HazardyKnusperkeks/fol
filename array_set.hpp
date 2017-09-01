@@ -322,6 +322,34 @@ class ArraySet {
 	
 	constexpr ArraySet(void) = default;
 	
+	constexpr ArraySet(const ArraySet& a) noexcept(std::is_nothrow_copy_constructible_v<decltype(Data)>) :
+			Data{a.Data}, Index{a.Index} {
+		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
+		return;
+	}
+	
+	constexpr ArraySet(ArraySet&& a) noexcept(std::is_nothrow_move_constructible_v<decltype(Data)>) :
+			Data{std::move(a.Data)}, Index{a.Index} {
+		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
+		return;
+	}
+	
+	constexpr ArraySet& operator=(const ArraySet& a) noexcept(std::is_nothrow_copy_constructible_v<ArraySet>) {
+		ArraySet copy(a);
+		using std::swap;
+		swap(copy, *this);
+		return *this;
+	}
+	
+	constexpr ArraySet& operator=(ArraySet&& a) noexcept(std::is_nothrow_move_assignable_v<decltype(Data)>) {
+		Data  = std::move(a.Data);
+		Index = std::exchange(a.Index, 0);
+		a.End = a.Begin;
+		End   = Begin;
+		constexprStd::advance(End, static_cast<std::make_signed_t<decltype(Index)>>(Index));
+		return *this;
+	}
+	
 	template<typename... Args,
 	         std::enable_if_t<(std::negation_v<std::is_same<std::decay_t<Args>, ArraySet>> && ...)>* = nullptr>
 	constexpr ArraySet(Args&&... args) : Data{std::forward<Args>(args)...}, Index{sizeof...(Args)} {
@@ -429,7 +457,10 @@ class AdaptableArraySet : public ArraySet<N, Types...> {
 	public:
 	using Base::Base;
 	
-	constexpr AdaptableArraySet(Base base) : Base{std::move(base)} {
+	constexpr AdaptableArraySet(void) = default;
+	
+	constexpr AdaptableArraySet(Base base) noexcept(std::is_nothrow_move_constructible_v<Base>) :
+			Base{std::move(base)} {
 		return;
 	}
 	
