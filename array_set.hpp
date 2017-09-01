@@ -457,4 +457,6 @@ class AdaptableArraySet : public ArraySet<N, Types...> {
 	}
 };
 
+void arraySetRuntimeChecks(void);
+
 #endif
