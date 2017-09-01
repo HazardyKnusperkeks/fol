@@ -56,6 +56,8 @@ struct Uninitialized<Type, true> {
 
 template<typename Type>
 struct Uninitialized<Type, false> {
+	unsigned char Storage[sizeof(Type)];
+	
 	template<typename... Args>
 	constexpr Uninitialized(Args&&... args) {
 		::new (&Storage) Type(std::forward<Args>(args)...);
@@ -73,8 +75,6 @@ struct Uninitialized<Type, false> {
 	
 	Type&& get() &&
 	{ return std::move(*reinterpret_cast<Type*>(Storage)); }
-	
-	unsigned char Storage[sizeof(Type)];
 };
 
 template<typename... Types>
