@@ -6,13 +6,14 @@
 #ifndef ARRAY_SET_HPP
 #define ARRAY_SET_HPP
 
-#include "constexpr_algorithm.hpp"
-#include "constexpr_iterator.hpp"
 #include "constexpr_variant.hpp"
 
 #include <array>
 #include <type_traits>
 #include <utility>
+
+#include <constexprStd/algorithm>
+#include <constexprStd/iterator>
 
 template<std::size_t N, typename... Types>
 class ArraySet;

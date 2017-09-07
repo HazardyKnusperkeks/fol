@@ -36,8 +36,6 @@ gcc {
 
 SOURCES		 = and.cpp\
 			   array_set.cpp\
-			   constexpr_algorithm.cpp\
-			   constexpr_iterator.cpp\
 			   constexpr_variant.cpp\
 			   equality.cpp\
 			   equivalent.cpp\
@@ -58,8 +56,6 @@ SOURCES		 = and.cpp\
 HEADERS		 = and.hpp\
 			   array_set.hpp\
 			   asserts.hpp\
-			   constexpr_algorithm.hpp\
-			   constexpr_iterator.hpp\
 			   constexpr_variant.hpp\
 			   equality.hpp\
 			   equivalent.hpp\
@@ -77,3 +73,4 @@ HEADERS		 = and.hpp\
 			   traits.hpp\
 			   variable.hpp
 
+include(libs/constexprStd/constexprStd.pri)

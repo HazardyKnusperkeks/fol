@@ -1,0 +1,3 @@
+[submodule "libs/constexprStd"]
+	path = libs/constexprStd
+	url = git@github.com:HazardyKnusperkeks/constexprStd
