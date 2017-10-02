@@ -6,7 +6,6 @@
 #ifndef FOL_EQUALITY_HPP
 #define FOL_EQUALITY_HPP
 
-#include "array_set.hpp"
 #include "not.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
@@ -24,7 +23,7 @@ struct Equality {
 	T2 Term2;
 	
 	using VariableCount = std::integral_constant<std::size_t, T1::VariableCount::value + T2::VariableCount::value>;
-	using VariableArray = decltype(ArraySet<0>{} + typename T1::VariableArray{} + typename T1::VariableArray{});
+//	using VariableArray = decltype(ArraySet<0>{} + typename T1::VariableArray{} + typename T1::VariableArray{});
 	
 	constexpr Equality(void) = default;
 	

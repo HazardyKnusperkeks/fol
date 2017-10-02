@@ -6,7 +6,6 @@
 #ifndef FOL_VARIABLE_HPP
 #define FOL_VARIABLE_HPP
 
-#include "array_set.hpp"
 #include "name.hpp"
 
 #include <array>
@@ -19,7 +18,7 @@ struct Variable {
 	Name<c,String...> N;
 	
 	using VariableCount = std::integral_constant<std::size_t, 1>;
-	using VariableArray = ArraySet<VariableCount::value, Variable<c, String...>>;
+//	using VariableArray = ArraySet<VariableCount::value, Variable<c, String...>>;
 	
 	constexpr auto prev(void) const noexcept {
 		return fromName(N.prev());
@@ -54,7 +53,7 @@ struct RtVariable {
 	RtName Name;
 	
 	using VariableCount = std::integral_constant<std::size_t, 1>;
-	using VariableArray = ArraySet<VariableCount::value, RtVariable>;
+//	using VariableArray = ArraySet<VariableCount::value, RtVariable>;
 	
 	RtVariable(const char c) : Name{c} { return; }
 	RtVariable(std::string name) : Name{std::move(name)} {

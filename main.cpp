@@ -178,6 +178,7 @@ int main(void) {
 	         <<std::endl
 	         <<"AndOr: "<<andOr<<" -- "<<PrettyPrinter{andOr}<<std::endl
 	         <<"OrAnd: "<<orAnd<<" -- "<<PrettyPrinter{orAnd}<<std::endl
+	         <<std::endl
 	         <<"Normal:     "<<PrettyPrinter{formula}<<std::endl
 	         <<"Simplified: "<<PrettyPrinter{simplified}<<std::endl
 	         <<"NNF:        "<<PrettyPrinter{nnf}<<std::endl;

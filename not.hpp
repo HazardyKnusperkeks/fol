@@ -6,7 +6,6 @@
 #ifndef FOL_NOT_HPP
 #define FOL_NOT_HPP
 
-#include "array_set.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
 
@@ -20,7 +19,7 @@ struct Not {
 	T t;
 	
 	using VariableCount = typename T::VariableCount;
-	using VariableArray = typename T::VariableArray;
+//	using VariableArray = typename T::VariableArray;
 	
 	constexpr auto simplified(void) const {
 		if constexpr ( IsNot<T>::value ) {

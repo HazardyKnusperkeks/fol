@@ -8,7 +8,6 @@
 
 #include "forward.hpp"
 
-#include "array_set.hpp"
 #include "exists.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
@@ -25,7 +24,7 @@ struct ForAll {
 	Form F;
 	
 	using VariableCount = std::integral_constant<std::size_t, 1 + Form::VariableCount::value>;
-	using VariableArray = decltype(ArraySet<1, Var>{} + typename Form::VariableArray{});
+//	using VariableArray = decltype(ArraySet<1, Var>{} + typename Form::VariableArray{});
 	
 	constexpr auto simplified(void) const {
 		auto form = F.simplified();

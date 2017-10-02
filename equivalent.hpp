@@ -7,7 +7,6 @@
 #define FOL_EQUIVALENT_HPP
 
 #include "and.hpp"
-#include "array_set.hpp"
 #include "implies.hpp"
 #include "pretty_printer.hpp"
 #include "traits.hpp"
@@ -23,7 +22,7 @@ struct Equivalent {
 	T2 t2;
 	
 	using VariableCount = std::integral_constant<std::size_t, T1::VariableCount::value + T2::VariableCount::value>;
-	using VariableArray = decltype(ArraySet<0>{} + typename T1::VariableArray{} + typename T1::VariableArray{});
+//	using VariableArray = decltype(ArraySet<0>{} + typename T1::VariableArray{} + typename T1::VariableArray{});
 	
 	constexpr auto simplified(void) const {
 		auto leftImplies  = Implies<T1, T2>{t1, t2}.simplified();

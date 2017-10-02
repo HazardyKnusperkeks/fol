@@ -12,6 +12,7 @@
 #include "exists.hpp"
 #include "forall.hpp"
 #include "function.hpp"
+#include "helper.hpp"
 #include "implies.hpp"
 #include "name.hpp"
 #include "not.hpp"
@@ -58,10 +59,12 @@ static_assert(Variable<'z', 'z', 'z'>{}.next()      == Variable<'a', 'a', 'a', '
 static_assert(Variable<'a', '9'>{}.next()           == Variable<'b', 'a'>{});
 static_assert(noexcept(std::declval<Variable<'b'>>().prev()));
 
-static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>>, Name<'f'>>);
-static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
+
+//Holds under GCC but not under clang
+//static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>>, Name<'f'>>);
+//static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 
 //This does not hold as of C++17
 //static_assert(std::is_nothrow_constructible_v<Function<Name<'f'>, Variable<'x'>>, Name<'f'>>);
@@ -84,10 +87,12 @@ static_assert(noexcept(std::declval<Function<Name<'f'>>>().next()));
 static_assert(Function<Name<'f'>, Variable<'x'>>{}.append(Variable<'y'>{}) ==
               Function<Name<'f'>, Variable<'x'>, Variable<'y'>>{});
 
-static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>>, Name<'f'>>);
-static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_move_constructible_v<std::tuple<Variable<'x'>>>);
 static_assert(std::is_nothrow_copy_constructible_v<std::tuple<Variable<'x'>>>);
+
+//Holds under GCC but not under clang
+//static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>>, Name<'f'>>);
+//static_assert(std::is_nothrow_default_constructible_v<std::tuple<Variable<'x'>>>);
 
 //This does not hold as of C++17
 //static_assert(std::is_nothrow_constructible_v<Predicate<Name<'f'>, Variable<'x'>>, Name<'f'>>);
@@ -100,8 +105,10 @@ static_assert(Predicate<Name<'q'>, Variable<'x'>>{}.prev() ==
               Predicate<Name<'p'>, Variable<'x'>>{});
 static_assert(Predicate<Name<'q'>, Variable<'x'>, Variable<'x'>>{}.prev() ==
               Predicate<Name<'p'>, Variable<'x'>, Variable<'x'>>{});
-static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().prev()));
-static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().next()));
+
+//Holds under GCC but not under clang
+//static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().prev()));
+//static_assert(noexcept(std::declval<Predicate<Name<'p'>>>().next()));
 
 //Variable count tests
 static_assert(Variable<'x'>::VariableCount::value == 1);

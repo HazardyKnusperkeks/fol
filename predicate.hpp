@@ -6,7 +6,7 @@
 #ifndef FOL_PREDICATE_HPP
 #define FOL_PREDICATE_HPP
 
-#include "array_set.hpp"
+#include "helper.hpp"
 #include "name.hpp"
 #include "not.hpp"
 #include "pretty_printer.hpp"
@@ -14,6 +14,7 @@
 
 #include <ostream>
 #include <tuple>
+#include <utility>
 
 namespace fol {
 
@@ -32,7 +33,7 @@ struct Predicate {
 	static_assert((IsTerm<Args>::value && ...), "All template arguments from the second on have to be terms!");
 	
 	using VariableCount = std::integral_constant<std::size_t, (0 + ... + Args::VariableCount::value)>;
-	using VariableArray = decltype((ArraySet<0>{} + ... + typename Args::VariableArray{}));
+//	using VariableArray = decltype((ArraySet<0>{} + ... + typename Args::VariableArray{}));
 	
 	NameT N;
 	std::tuple<Args...> A;
@@ -44,7 +45,7 @@ struct Predicate {
 	constexpr Predicate(NameT n, Args... a)
 			noexcept(std::is_nothrow_move_constructible_v<NameT> &&
 			         (std::is_nothrow_move_constructible_v<Args> && ...) &&
-	                 noexcept(std::make_tuple(std::move(a)...))) : N{std::move(n)},
+			         noexcept(std::make_tuple(std::move(a)...))) : N{std::move(n)},
 			A{std::make_tuple(std::move(a)...)} {
 		return;
 	}

@@ -35,8 +35,6 @@ gcc {
 }
 
 SOURCES		 = and.cpp\
-			   array_set.cpp\
-			   constexpr_variant.cpp\
 			   equality.cpp\
 			   equivalent.cpp\
 			   exists.cpp\
@@ -54,9 +52,7 @@ SOURCES		 = and.cpp\
 			   main.cpp
 
 HEADERS		 = and.hpp\
-			   array_set.hpp\
 			   asserts.hpp\
-			   constexpr_variant.hpp\
 			   equality.hpp\
 			   equivalent.hpp\
 			   exists.hpp\

@@ -8,9 +8,11 @@
 
 #include "not.hpp"
 #include "pretty_printer.hpp"
+#include "traits.hpp"
 
 #include <ostream>
 #include <tuple>
+#include <utility>
 
 namespace fol {
 
